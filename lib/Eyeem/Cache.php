@@ -58,7 +58,6 @@ class Eyeem_Cache
     // Filecache
     if ($filecache = self::getFilecache($key)) {
       $value = serialize($value);
-      $filecache = self::_getFilecache($key);
       file_put_contents($filecache, $value);
     }
   }

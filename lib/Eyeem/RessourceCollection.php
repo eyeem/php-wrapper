@@ -24,7 +24,11 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
   public function getCacheKey($params = array())
   {
     $parent = $this->getParentRessource();
-    $cacheKey = $parent->getName() . '_' . $parent->getId() . '_' . $this->name;
+    $parentId = $parent->getId();
+    if ($parentId == 'me') {
+      $parentId = $this->getEyeem()->getAccessToken();
+    }
+    $cacheKey = $parent->getName() . '_' . $parentId . '_' . $this->name;
     if (!empty($params)) {
       $cacheKey .= '_' . http_build_query($params);
     }

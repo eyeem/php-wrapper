@@ -59,8 +59,9 @@ class Eyeem_Ressource
     if (empty($this->id)) {
       throw new Exception("Unknown id.");
     }
+    $id = $this->id == 'me' ? $this->getEyeem()->getAccessToken() : $this->id;
     $updated = $this->getUpdated();
-    return static::$name . '_' . $this->id . ($updated ? '_' . $updated : '');
+    return static::$name . '_' . $id . ($updated ? '_' . $updated : '');
   }
 
   public function getEndpoint()
