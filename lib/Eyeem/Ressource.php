@@ -17,8 +17,6 @@ class Eyeem_Ressource
 
   public static $collections = array();
 
-  public static $cachetime = 300;
-
   /* Object Properties */
 
   public $id;
@@ -85,7 +83,7 @@ class Eyeem_Ressource
         throw new Exception("Missing ressource in response ($name).");
       }
       $value = $response[$name];
-      Eyeem_Cache::set($cacheKey, $value, $this->getUpdated() ? 0 : self::$cachetime);
+      Eyeem_Cache::set($cacheKey, $value, $this->getUpdated() ? 0 : null);
     }
     return $value;
   }

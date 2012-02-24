@@ -3,6 +3,8 @@
 class Eyeem_Cache
 {
 
+  protected static $ttl = 300;
+
   protected static $tmpDir;
 
   protected static $memcache;
@@ -34,8 +36,9 @@ class Eyeem_Cache
     }
   }
 
-  public static function set($key, $value, $ttl = 300)
+  public static function set($key, $value, $ttl = null)
   {
+    $ttl = isset($ttl) ? $ttl : self::$ttl;
     // echo "Eyeem_Cache:set:$ttl:$key\n";
     $key = md5($key);
     // echo "Eyeem_Cache:set:md5:$key:$ttl\n";

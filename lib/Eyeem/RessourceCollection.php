@@ -52,7 +52,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
         throw new Exception("Missing collection in response ($this->name).");
       }
       $value = $response[$this->name];
-      Eyeem_Cache::set($cacheKey, $value, 300);
+      Eyeem_Cache::set($cacheKey, $value);
     }
     return $value['items'];
   }
