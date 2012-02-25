@@ -137,4 +137,14 @@ class Eyeem_Ressource
     throw new Exception("Unknown method ($name).");
   }
 
+  public function toArray()
+  {
+    // To Fetch or Not To Fetch missing data?
+    $array = array();
+    foreach (static::$properties as $key) {
+      $array[$key] = $this->$key;
+    }
+    return $array;
+  }
+
 }
