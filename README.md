@@ -8,8 +8,8 @@ Initialising
 require_once 'lib/Eyeem.php';
 
 $eyeem = new Eyeem();
-$eyeem->setClientId('qWRkvLNYv5RFksuG5BcAWBIenb7SCtqY');
-$eyeem->setClientSecret('8ZwWTTSIH6ygy9tvc65mY5qKa6jtDs1P');
+$eyeem->setClientId('CLIENT_ID');
+$eyeem->setClientSecret('CLIENT_SECRET');
 $eyeem->autoload();
 ```
 
