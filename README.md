@@ -32,12 +32,12 @@ List of photo properties:
 
 Acceding a ressource collection: ```$comments = $photo->getComments();```
 
-Looping over a collection: ```foreach ($comments as $comment) { echo $comment->getMessage(); }```
-
 Or: ```foreach ($photo->getLikers() as $user) { echo $user->getFullname(); }```
 
 List of photo collections:
   'likers' (users), 'albums', 'comments'
+
+Example: ```foreach ($comments as $comment) { echo $comment->getMessage(); }```
 
 User
 ----
@@ -53,6 +53,8 @@ List of user properties:
 List of user collections:
   'photos', 'friends' (users), 'followers' (users), 'likedAlbums', 'likedPhotos', 'friendsPhotos', 'feed' (album)
 
+Example: ```foreach ($user->getFriends() as $friend) { echo $friend->getFullname(); }```
+
 Album
 ------
 
@@ -62,6 +64,8 @@ List of album properties: 'id', 'updated', 'name', 'thumbUrl'
 
 List of album collections:
   'photos', 'likers' (users), 'contributors' (users)
+
+Example: ```foreach ($album->getPhotos() as $photo) { echo $photo->getCaption(); }```
 
 Comment
 -------
