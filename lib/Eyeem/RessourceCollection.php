@@ -40,9 +40,9 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     return $this->getParentRessource()->getEyeem();
   }
 
-  public function request($endpoint, $params = array())
+  public function request($endpoint, $method = 'GET', $params = array())
   {
-    $response = $this->getParentRessource()->request($endpoint, $params);
+    $response = $this->getParentRessource()->request($endpoint, $method, $params);
     return $response;
   }
 
@@ -51,7 +51,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     $cacheKey = $this->getCacheKey($params);
     if (!$value = Eyeem_Cache::get($cacheKey)) {
       $endpoint = $this->getEndpoint();
-      $response = $this->request($endpoint, $params);
+      $response = $this->request($endpoint, 'GET', $params);
       if (empty($response[$this->name])) {
         throw new Exception("Missing collection in response ($this->name).");
       }

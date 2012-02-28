@@ -39,10 +39,10 @@ class Eyeem
     return $url;
   }
 
-  public function request($endpoint, $params = array())
+  public function request($endpoint, $method = 'GET', $params = array())
   {
     $url = $this->getApiUrl($endpoint);
-    $body = Eyeem_Http::get($url, $params);
+    $body = Eyeem_Http::request($url, $method, $params);
     $response = json_decode($body, true);
     return $response;
   }

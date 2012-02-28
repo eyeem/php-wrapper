@@ -101,9 +101,9 @@ class Eyeem_Ressource
     return $collection;
   }
 
-  public function request($endpoint, $params = array())
+  public function request($endpoint, $method = 'GET', $params = array())
   {
-    $response = $this->getEyeem()->request($endpoint, $params);
+    $response = $this->getEyeem()->request($endpoint, $method, $params);
     return $response;
   }
 
