@@ -60,7 +60,7 @@ class Eyeem_Ressource
       throw new Exception("Unknown id.");
     }
     $updated = $this->getUpdated('U');
-    return static::$name . '_' . $id . ($updated ? '_' . $updated : '');
+    return static::$name . '_' . $this->id . ($updated ? '_' . $updated : '');
   }
 
   public function getEndpoint()
