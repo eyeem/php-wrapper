@@ -61,6 +61,19 @@ class Eyeem
     return Eyeem_OAuth2::getLoginUrl($clientId);
   }
 
+  public function login($email, $password)
+  {
+    $response = $this->request('/auth/login', 'POST', compact('email', 'password'));
+    // Update Access Token
+    $this->setAccessToken($response['access_token']);
+    // Update User Cache
+    $user = $this->getUser($response['user']);
+    $user->id = 'me';
+    Eyeem_Cache::set($user->getCacheKey(), $response['user'], $user->getUpdated() ? 0 : null);
+    // Return Eyeem for chainability
+    return $this;
+  }
+
   public function getToken($code)
   {
     $clientId = $this->getClientId();
