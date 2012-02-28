@@ -28,14 +28,4 @@ class Eyeem_Photo extends Eyeem_Ressource
     return $this->getRessourceObject('user', $user);
   }
 
-  public function getUpdated($format = null)
-  {
-    $updated = parent::getUpdated();
-    if ($updated) {
-      $format = isset($format) ? $format : 'U';
-      $dt = new DateTime($updated);
-      return $dt->format($format);
-    }
-  }
-
 }

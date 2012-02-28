@@ -24,4 +24,14 @@ class Eyeem_User extends Eyeem_Ressource
     'feed' => 'album'
   );
 
+  public function getCacheKey()
+  {
+    if (empty($this->id)) {
+      throw new Exception("Unknown id.");
+    }
+    $id = $this->id == 'me' ? $this->getEyeem()->getAccessToken() : $this->id;
+    $updated = $this->getUpdated('U');
+    return static::$name . '_' . $id . ($updated ? '_' . $updated : '');
+  }
+
 }

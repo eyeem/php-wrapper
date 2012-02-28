@@ -59,8 +59,7 @@ class Eyeem_Ressource
     if (empty($this->id)) {
       throw new Exception("Unknown id.");
     }
-    $id = $this->id == 'me' ? $this->getEyeem()->getAccessToken() : $this->id;
-    $updated = $this->getUpdated();
+    $updated = $this->getUpdated('U');
     return static::$name . '_' . $id . ($updated ? '_' . $updated : '');
   }
 
@@ -70,6 +69,15 @@ class Eyeem_Ressource
       throw new Exception("Unknown id.");
     }
     return str_replace('{id}', $this->id, static::$endpoint);
+  }
+
+  public function getUpdated($format = null)
+  {
+    if ($this->updated) {
+      $format = isset($format) ? $format : DateTime::ISO8601;
+      $dt = new DateTime($this->updated);
+      return $dt->format($format);
+    }
   }
 
   public function getRessource()
