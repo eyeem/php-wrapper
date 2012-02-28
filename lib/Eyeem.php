@@ -42,9 +42,12 @@ class Eyeem
   public function request($endpoint, $method = 'GET', $params = array())
   {
     $url = $this->getApiUrl($endpoint);
-    $body = Eyeem_Http::request($url, $method, $params);
-    $response = json_decode($body, true);
-    return $response;
+    $response = Eyeem_Http::request($url, $method, $params);
+    $array = json_decode($response['body'], true);
+    if ($response['code'] >= 400) {
+      throw new Eyeem_Exception($array['message'], $response['code']);
+    }
+    return $array;
   }
 
   public function getRessourceObject($ressourceName, $infos = array())

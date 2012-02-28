@@ -111,8 +111,7 @@ class Eyeem_Ressource
 
   public function request($endpoint, $method = 'GET', $params = array())
   {
-    $response = $this->getEyeem()->request($endpoint, $method, $params);
-    return $response;
+    return $this->getEyeem()->request($endpoint, $method, $params);
   }
 
   public function __get($key)

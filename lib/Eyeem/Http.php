@@ -7,19 +7,9 @@ class Eyeem_Http
 
   public static $timeout = 5;
 
-  public static function get($url, $params = array())
-  {
-    return self::request($url, 'GET', $params);
-  }
-
-  public static function post($url, $params = array())
-  {
-    return self::request($url, 'POST', $params);
-  }
-
   public static function request($url, $method = 'GET', $params = array())
   {
-      // echo "$method:$url\n";
+      echo "$method:$url\n";
       if (function_exists('curl_init')) {
           $ch = curl_init();
           // Method
@@ -41,19 +31,22 @@ class Eyeem_Http
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
           curl_setopt($ch, CURLOPT_USERAGENT, self::$userAgent . ' (curl)');
           curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, self::$timeout);
-          $content = curl_exec($ch);
+          $body = curl_exec($ch);
+          $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
           curl_close($ch);
       } else {
           throw new Exception('Curl not available.');
+          /*
           $httpParams = array(
             'method' => $method,
             'user_agent' => self::$userAgent . '(php)',
             'timeout' => self::$timeout
           );
           $httpContext = stream_context_create(array('http' => $httpParams));
-          $content = file_get_contents($url, false, $httpContext);
+          $body = file_get_contents($url, false, $httpContext);
+          */
       }
-      return $content;
+      return compact('code', 'body');
   }
 
 }
