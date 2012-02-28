@@ -9,7 +9,7 @@ class Eyeem_Http
 
   public static function request($url, $method = 'GET', $params = array())
   {
-      echo "$method:$url\n";
+      // echo "$method:$url\n";
       if (function_exists('curl_init')) {
           $ch = curl_init();
           // Method
