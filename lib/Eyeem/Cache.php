@@ -15,12 +15,6 @@ class Eyeem_Cache
     $key = md5($key);
     // echo "Eyeem_Cache:get:md5:$key\n";
 
-    // APC
-    if (function_exists('apc_fetch')) {
-      $value = apc_fetch($key);
-      return $value ? unserialize($value) : null;
-    }
-
     // Memcache
     if (self::$memcache) {
       $value = self::$memcache->get($key);
@@ -34,6 +28,12 @@ class Eyeem_Cache
       $value = unserialize($value);
       return $value;
     }
+
+    // APC
+    if (function_exists('apc_fetch')) {
+      $value = apc_fetch($key);
+      return $value ? unserialize($value) : null;
+    }
   }
 
   public static function set($key, $value, $ttl = null)
@@ -42,12 +42,6 @@ class Eyeem_Cache
     // echo "Eyeem_Cache:set:$ttl:$key\n";
     $key = md5($key);
     // echo "Eyeem_Cache:set:md5:$key:$ttl\n";
-
-    // APC
-    if (function_exists('apc_store')) {
-      $value = serialize($value);
-      return apc_store($key, $value, $ttl);
-    }
 
     // Memcache
     if (self::$memcache) {
@@ -59,6 +53,12 @@ class Eyeem_Cache
     if ($filecache = self::getFilecache($key)) {
       $value = serialize($value);
       file_put_contents($filecache, $value);
+    }
+
+    // APC
+    if (function_exists('apc_store')) {
+      $value = serialize($value);
+      return apc_store($key, $value, $ttl);
     }
   }
 
