@@ -7,6 +7,12 @@ class Eyeem_Http
 
   public static $timeout = 5;
 
+  public static function get($url, $params = array())
+  {
+    $response = self::request($url, 'GET', $params);
+    return $response['body'];
+  }
+
   public static function request($url, $method = 'GET', $params = array())
   {
       // echo "$method:$url\n";

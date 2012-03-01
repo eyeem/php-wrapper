@@ -52,29 +52,50 @@ class Eyeem
 
   public function getRessourceObject($ressourceName, $infos = array())
   {
+    // Support getUser('me')
+    if ($ressourceName == 'user' && is_string($infos) && $infos == 'me') { return $this->getAuthUser(); }
+    // Normal Behavior
     $classname = 'Eyeem_' . ucfirst($ressourceName);
     $object = new $classname($infos);
     $object->setEyeem($this);
     return $object;
   }
 
-  public function getLoginUrl()
+  // Auth
+
+  public function getAuthUser()
   {
-    $clientId = $this->getClientId();
-    return Eyeem_OAuth2::getLoginUrl($clientId);
+    if ($accessToken = $this->getAccessToken()) {
+      $cacheKey = 'user' . '_' . $accessToken;
+      if (!$user = Eyeem_Cache::get($cacheKey)) {
+        $response = $this->request('/auth/ok');
+        $user = $response['user'];
+        Eyeem_Cache::set($cacheKey, $user);
+      }
+      return $this->getRessourceObject('user', $user);
+    }
   }
 
   public function login($email, $password)
   {
     $response = $this->request('/auth/login', 'POST', compact('email', 'password'));
+    $user = $response['user'];
+    $accessToken = $response['access_token'];
     // Update Access Token
-    $this->setAccessToken($response['access_token']);
+    $this->setAccessToken($accessToken);
     // Update User Cache
-    $user = $this->getUser($response['user']);
-    $user->id = 'me';
-    Eyeem_Cache::set($user->getCacheKey(), $response['user'], $user->getUpdated() ? 0 : null);
+    $cacheKey = 'user' . '_' . $accessToken;
+    Eyeem_Cache::set($cacheKey, $user);
     // Return Eyeem for chainability
     return $this;
+  }
+
+  // oAuth
+
+  public function getLoginUrl()
+  {
+    $clientId = $this->getClientId();
+    return Eyeem_OAuth2::getLoginUrl($clientId);
   }
 
   public function getToken($code)
@@ -101,7 +122,8 @@ class Eyeem
     if (substr($name, 0, 3) == 'set') {
       $key = lcfirst(substr($name, 3));
       // Default (write object property)
-      return $this->$key = $arguments[0];
+      $this->$key = $arguments[0];
+      return $this;
     }
     throw new Exception("Unknown method ($name).");
   }
