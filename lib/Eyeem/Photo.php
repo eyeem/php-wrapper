@@ -8,12 +8,19 @@ class Eyeem_Photo extends Eyeem_Ressource
   public static $endpoint = '/photos/{id}';
 
   public static $properties = array(
+    /* Basic */
     'id',
-    'thumbUrl', 'photoUrl',
-    'width', 'height',
+    'thumbUrl',
+    'photoUrl',
+    'width',
+    'height',
     'updated',
+    /* Detailed */
+    'webUrl',
+    'user',
     'caption',
-    'user'
+    'totalLikes',
+    'totalComments'
   );
 
   public static $collections = array(

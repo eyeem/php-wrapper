@@ -11,12 +11,11 @@ class Eyeem_Comment extends Eyeem_Ressource
     'id',
     'photoId',
     'message',
+    'user',
     'updated',
-    'user'
   );
 
-  public static $collections = array(
-  );
+  public static $collections = array();
 
   public function getEndpoint()
   {
@@ -33,6 +32,11 @@ class Eyeem_Comment extends Eyeem_Ressource
   {
     $user = parent::getUser();
     return $this->getRessourceObject('user', $user);
+  }
+
+  public function getPhoto()
+  {
+    return $this->getRessourceObject('photo', $this->getPhotoId());
   }
 
 }

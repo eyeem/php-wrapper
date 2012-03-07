@@ -12,6 +12,11 @@ class Eyeem_Album extends Eyeem_Ressource
     'name',
     'thumbUrl',
     'updated',
+    'webUrl',
+    'type',
+    'totalPhotos',
+    'totalLikers',
+    'totalContributors'
   );
 
   public static $collections = array(

@@ -8,10 +8,20 @@ class Eyeem_User extends Eyeem_Ressource
   public static $endpoint = '/users/{id}';
 
   public static $properties = array(
+    /* Basic */
     'id',
-    'fullname', 'nickname', 'description',
-    'thumbUrl', 'photoUrl',
-    'totalPhotos', 'totalFollowers', 'totalFriends', 'totalLikedAlbums'
+    'fullname',
+    'nickname',
+    'thumbUrl',
+    'photoUrl',
+    /* Detailed */
+    'totalPhotos',
+    'totalFollowers',
+    'totalFriends',
+    'totalLikedAlbums',
+    'totalLikedPhotos',
+    'webUrl',
+    'description'
   );
 
   public static $collections = array(
