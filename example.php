@@ -67,26 +67,26 @@ if (isset($_GET['signout'])) {
 
         <?php if (empty($_GET['part']) || $_GET['part'] == 'me') : ?>
           <h3>Me</h3>
-          <p><pre>&lt;?php print_r( $eyeem->getUser('me')->getInfos() ); ?></pre></p>
-          <p><pre><?php print_r( $eyeem->getUser('me')->getInfos() ) ?></pre></p>
+          <p><pre>&lt;?php print_r( $eyeem->getAuthUser()->getInfos() ); ?></pre></p>
+          <p><pre><?php print_r( $eyeem->getAuthUser()->getInfos() ) ?></pre></p>
           <script>jQuery(function($) { $('.me').addClass('active'); })</script>
 
         <?php elseif ($_GET['part'] == 'photos') : ?>
           <h3>My Photos</h3>
-          <p><pre>&lt;?php print_r( $eyeem->getUser('me')->getPhotos()->getItems() ); ?></pre></p>
-          <p><pre><?php print_r( $eyeem->getUser('me')->getPhotos()->getItems() ) ?></pre></p>
+          <p><pre>&lt;?php print_r( $eyeem->getAuthUser()->getPhotos()->getItems() ); ?></pre></p>
+          <p><pre><?php print_r( $eyeem->getAuthUser()->getPhotos()->getItems() ) ?></pre></p>
           <script>jQuery(function($) { $('.photos').addClass('active'); })</script>
 
         <?php elseif ($_GET['part'] == 'friends') : ?>
           <h3>My Photos</h3>
-          <p><pre>&lt;?php print_r( $eyeem->getUser('me')->getFriends()->getItems() ); ?></pre></p>
-          <p><pre><?php print_r( $eyeem->getUser('me')->getFriends()->getItems() ) ?></pre></p>
+          <p><pre>&lt;?php print_r( $eyeem->getAuthUser()->getFriends()->getItems() ); ?></pre></p>
+          <p><pre><?php print_r( $eyeem->getAuthUser()->getFriends()->getItems() ) ?></pre></p>
           <script>jQuery(function($) { $('.friends').addClass('active'); })</script>
 
         <?php elseif ($_GET['part'] == 'friendsPhotos') : ?>
           <h3>Friends Photos</h3>
-          <p><pre>&lt;?php print_r( $eyeem->getUser('me')->getFriendsPhotos()->getItems(array('limit' => 3)) ); ?></pre></p>
-          <p><pre><?php print_r( $eyeem->getUser('me')->getFriendsPhotos()->getItems(array('limit' => 3)) ) ?></pre></p>
+          <p><pre>&lt;?php print_r( $eyeem->getAuthUser()->getFriendsPhotos(array('limit' => 3))->getItems() ); ?></pre></p>
+          <p><pre><?php print_r( $eyeem->getAuthUser()->getFriendsPhotos(array('limit' => 3))->getItems() ) ?></pre></p>
           <script>jQuery(function($) { $('.friendsPhotos').addClass('active'); })</script>
 
         <?php else: ?>

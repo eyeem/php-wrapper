@@ -26,7 +26,8 @@ Acceding a property: ```echo $photo->caption;``` or ```echo $photo->getCaption()
 Getting an object as array: ```$array = $photo->toArray();```
 
 List of photo properties:
-  'id', 'updated', 'thumbUrl', 'photoUrl', 'width', 'height', 'caption', 'user'
+  'id', 'thumbUrl', 'photoUrl', 'width', 'height', 'updated',
+  'webUrl', 'user', 'caption', 'totalLikes', 'totalComments'
 
 ```$photo->getUser();``` return an user object.
 
@@ -47,8 +48,9 @@ User
 Acceding a property: ```echo $user->fullname;``` or ```echo $user->getFullname();```
 
 List of user properties:
-  'id', 'fullname', 'nickname', 'description', 'thumbUrl', 'photoUrl',
-  'totalPhotos', 'totalFollowers', 'totalFriends', 'totalLikedAlbums'
+  'id', 'fullname', 'nickname', 'thumbUrl', 'photoUrl',
+  'totalPhotos', 'totalFollowers', 'totalFriends', 'totalLikedAlbums', 'totalLikedPhotos',
+  'webUrl', 'description'
 
 List of user collections:
   'photos', 'friends' (users), 'followers' (users), 'likedAlbums', 'likedPhotos', 'friendsPhotos', 'feed' (album)
@@ -60,7 +62,9 @@ Album
 
 ```$album = $eyeem->getAlbum('{album_id}');```
 
-List of album properties: 'id', 'updated', 'name', 'thumbUrl'
+List of album properties:
+  'id', 'name', 'thumbUrl', 'updated',
+  'webUrl', 'type', 'totalPhotos', 'totalLikers', 'totalContributors'
 
 List of album collections:
   'photos', 'likers' (users), 'contributors' (users)
@@ -70,6 +74,7 @@ Example: ```foreach ($album->getPhotos() as $photo) { echo $photo->getCaption();
 Comment
 -------
 
-List of comment properties: 'id', 'photoId', 'updated', 'message', 'user'
+List of comment properties:
+  'id', 'photoId', 'updated', 'message', 'user'
 
 ```$comment->getUser();``` return an user object.

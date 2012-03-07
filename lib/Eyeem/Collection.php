@@ -14,6 +14,7 @@ class Eyeem_Collection implements Iterator
   public function rewind()
   {
     $this->_index = 0;
+    $this->_items = null;
   }
 
   public function key()

@@ -39,6 +39,9 @@ class Eyeem_Ressource
       if (in_array($key, static::$properties)) {
         $this->$key = $value;
       }
+      if (isset(static::$collections[$key])) {
+        $this->$key = $value;
+      }
     }
   }
 
@@ -97,21 +100,55 @@ class Eyeem_Ressource
     return $value;
   }
 
+  public function getRawArray()
+  {
+    return $this->getRessource();
+  }
+
   public function getRessourceObject($type, $infos = array())
   {
     return $this->getEyeem()->getRessourceObject($type, $infos);
   }
 
-  public function getCollection($name)
+  public function getCollection($name, $parameters = array())
   {
-    $type = static::$collections[$name];
-    $collection = new Eyeem_RessourceCollection($name, $type, $this);
+    $collection = new Eyeem_RessourceCollection();
+    // Collection name (match the name in URL: friendsPhotos, comments, likers, etc ...)
+    $collection->setName($name);
+    // Which kind of objects we are handling (user, album, photo, etc)
+    $collection->setType(static::$collections[$name]);
+    // Keep a link to the current object
+    $collection->setParentRessource($this);
+    // The query parameters (one of Eyeem_RessourceCollection::$parameters)
+    $collection->setParameters($parameters);
+    // If we have some properties already available (offset, limit, total, items)
+    if (isset($this->$name)) {
+      $collection->setProperties($this->$name);
+    }
+    // If we have the total already available
+    $totalKey = 'total' . ucfirst($name);
+    if (isset($this->$totalKey)) {
+      $collection->setTotal($this->$totalKey);
+    }
     return $collection;
   }
 
-  public function request($endpoint, $method = 'GET', $params = array())
+
+  public function update($params = array())
   {
-    return $this->getEyeem()->request($endpoint, $method, $params);
+    $response = $this->request($this->getEndpoint(), 'PUT', $params);
+    return true;
+  }
+
+  public function delete()
+  {
+    $this->request($this->getEndpoint(), 'DELETE');
+    return true;
+  }
+
+  public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
+  {
+    return $this->getEyeem()->request($endpoint, $method, $params, $authenticated);
   }
 
   public function __get($key)
@@ -130,7 +167,8 @@ class Eyeem_Ressource
       $key = lcfirst(substr($name, 3));
       // Collection Objects
       if (isset(static::$collections[$key])) {
-        return $this->getCollection($key);
+        $parameters = isset($arguments[0]) ? $arguments[0] : array();
+        return $this->getCollection($key, $parameters);
       }
       // Default (read object property)
       return $this->$key;
@@ -139,7 +177,8 @@ class Eyeem_Ressource
     if (substr($name, 0, 3) == 'set') {
       $key = lcfirst(substr($name, 3));
       // Default (write object property)
-      return $this->$key = $arguments[0];
+      $this->$key = $arguments[0];
+      return $this;
     }
     throw new Exception("Unknown method ($name).");
   }

@@ -44,4 +44,36 @@ class Eyeem_User extends Eyeem_Ressource
     return static::$name . '_' . $id . ($updated ? '_' . $updated : '');
   }
 
+  public function getFriendsPhotos($params = array())
+  {
+    /* Fix wrong defaults in API */
+    $default_params = array('detailed' => false, 'includeComments' => false, 'includeLikers' => false);
+    $params = array_merge($default_params, $params);
+    return $this->getCollection('friendsPhotos', $params);
+  }
+
+  public function isFollowing($user)
+  {
+    $user = $this->getEyeem()->getUser($user);
+    $endpoint = $this->getEndpoint() . '/friends/' . $user->getId();
+    try {
+      $response = $this->getEyeem()->request($endpoint, 'GET');
+    } catch (Exception $e) {
+      return false;
+    }
+    return true;
+  }
+
+  public function isFollowedBy($user)
+  {
+    $user = $this->getEyeem()->getUser($user);
+    $endpoint = $this->getEndpoint() . '/followers/' . $user->getId();
+    try {
+      $response = $this->getEyeem()->request($endpoint, 'GET');
+    } catch (Exception $e) {
+      return false;
+    }
+    return true;
+  }
+
 }

@@ -9,13 +9,14 @@ class Eyeem_Http
 
   public static function get($url, $params = array())
   {
-    $response = self::request($url, 'GET', $params);
+    $response = self::request(array('url' => $url, 'method' => 'GET', 'params' => $params));
     return $response['body'];
   }
 
-  public static function request($url, $method = 'GET', $params = array())
+  public static function request($options = array())
   {
-      // echo "$method:$url\n";
+      extract($options);
+
       if (function_exists('curl_init')) {
           $ch = curl_init();
           // Method
@@ -24,14 +25,26 @@ class Eyeem_Http
           } else {
             curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
           }
+          // Headers
+          $headers = array();
+          if (isset($accessToken)) {
+            $headers[] = "Authorization: Bearer $accessToken";
+          } elseif (isset($clientId)) {
+            $headers[] = "X-Client-Id: $clientId";
+          }
           // Parameters
           if (!empty($params)) {
             if ($method == 'GET') {
               $url .= (strpos($url, '?') === false ? '?': '&') . http_build_query($params, null, '&');
             } else {
+              if ($method == 'PUT') {
+                $params = http_build_query($params, null, '&');
+              }
               curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
             }
           }
+          // echo "$method:$url\n";
+          curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
           curl_setopt($ch, CURLOPT_URL, $url);
           curl_setopt($ch, CURLOPT_HEADER, false);
           curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

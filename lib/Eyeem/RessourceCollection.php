@@ -3,16 +3,51 @@
 class Eyeem_RessourceCollection extends Eyeem_Collection
 {
 
-  public function __construct($name, $type, $parentRessource)
+  public $name;
+
+  public $type;
+
+  protected $parentRessource;
+
+  public static $properties = array(
+    'offset',
+    'limit',
+    'total',
+    'items'
+  );
+
+  public static $parameters = array(
+    'offset',
+    'limit',
+    'detailed',
+    'includeComments',
+    'numComments',
+    'includeLikers',
+    'numLikers',
+    'includePhotos',
+    'numPhotos',
+    'includeAlbums',
+    'numAlbums',
+    'includeContributors',
+    'numContributors'
+  );
+
+  public function setProperties($params = array())
   {
-    $this->name = $name;
-    $this->type = $type;
-    $this->parentRessource = $parentRessource;
+    foreach ($params as $key => $value) {
+      if (in_array($key, static::$properties)) {
+        $this->$key = $value;
+      }
+    }
   }
 
-  public function getParentRessource()
+  public function setParameters($params = array())
   {
-    return $this->parentRessource;
+    foreach ($params as $key => $value) {
+      if (in_array($key, static::$parameters)) {
+        $this->$key = $value;
+      }
+    }
   }
 
   public function getEndpoint()
@@ -24,15 +59,48 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
   public function getCacheKey($params = array())
   {
     $parent = $this->getParentRessource();
-    $parentId = $parent->getId();
-    if ($parentId == 'me') {
-      $parentId = $this->getEyeem()->getAccessToken();
-    }
-    $cacheKey = $parent->getName() . '_' . $parentId . '_' . $this->name;
+    $cacheKey = $parent->getName() . '_' . $parent->getId() . '_' . $this->name;
     if (!empty($params)) {
       $cacheKey .= '_' . http_build_query($params);
     }
     return $cacheKey;
+  }
+
+  public function getParams()
+  {
+    $params = array();
+    foreach (static::$parameters as $key) {
+      if (isset($this->$key)) {
+        $params[$key] = $this->$key;
+      }
+    }
+    return $params;
+  }
+
+  public function getCollection()
+  {
+    $params = $this->getParams();
+    $cacheKey = $this->getCacheKey($params);
+    if (!$value = Eyeem_Cache::get($cacheKey)) {
+      $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params);
+      if (empty($response[$this->name])) {
+        throw new Exception("Missing collection in response ($this->name).");
+      }
+      $value = $response[$this->name];
+      Eyeem_Cache::set($cacheKey, $value);
+    }
+    return $value;
+  }
+
+  public function getRessourceObject($ressource)
+  {
+    return $this->getParentRessource()->getRessourceObject($this->type, $ressource);
+  }
+
+  public function post($params = array())
+  {
+    $response = $this->getEyeem()->request($this->getEndpoint(), 'POST', $params);
+    return $response;
   }
 
   public function getEyeem()
@@ -40,30 +108,31 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     return $this->getParentRessource()->getEyeem();
   }
 
-  public function request($endpoint, $method = 'GET', $params = array())
+  public function __get($key)
   {
-    $response = $this->getParentRessource()->request($endpoint, $method, $params);
-    return $response;
-  }
-
-  public function getItems($params = array())
-  {
-    $cacheKey = $this->getCacheKey($params);
-    if (!$value = Eyeem_Cache::get($cacheKey)) {
-      $endpoint = $this->getEndpoint();
-      $response = $this->request($endpoint, 'GET', $params);
-      if (empty($response[$this->name])) {
-        throw new Exception("Missing collection in response ($this->name).");
-      }
-      $value = $response[$this->name];
-      Eyeem_Cache::set($cacheKey, $value);
+    if (in_array($key, static::$properties)) {
+      $collection = $this->getCollection();
+      return $collection[$key];
     }
-    return $value['items'];
+    throw new Exception("Unknown property ($key).");
   }
 
-  public function getRessourceObject($infos = array())
+  public function __call($name, $arguments)
   {
-    return $this->getParentRessource()->getRessourceObject($this->type, $infos);
+    // Get methods
+    if (substr($name, 0, 3) == 'get') {
+      $key = lcfirst(substr($name, 3));
+      // Default (read object property)
+      return $this->$key;
+    }
+    // Set methods
+    if (substr($name, 0, 3) == 'set') {
+      $key = lcfirst(substr($name, 3));
+      // Default (write object property)
+      $this->$key = $arguments[0];
+      return $this;
+    }
+    throw new Exception("Unknown method ($name).");
   }
 
 }

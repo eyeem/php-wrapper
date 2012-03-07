@@ -35,4 +35,29 @@ class Eyeem_Photo extends Eyeem_Ressource
     return $this->getRessourceObject('user', $user);
   }
 
+  // For Authenticated Users
+
+  public function like()
+  {
+    $endpoint = $this->getEndpoint() . '/likers/me';
+    $this->request($endpoint, 'PUT');
+    return true;
+  }
+
+  public function unlike()
+  {
+    $endpoint = $this->getEndpoint() . '/likers/me';
+    $this->request($endpoint, 'DELETE');
+    return true;
+  }
+
+  public function postComment($params = array())
+  {
+    if (is_string($params)) {
+      $params = array('message' => $params);
+    }
+    $response = $this->getComments()->post($params);
+    return $this->getRessourceObject('comment', $response['comment']);
+  }
+
 }

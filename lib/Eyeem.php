@@ -31,18 +31,19 @@ class Eyeem
   public function getApiUrl($endpoint)
   {
     $url = $this->baseUrl . $endpoint;
-    if ($this->accessToken) {
-      $url .= '?access_token=' . $this->accessToken;
-    } elseif ($this->clientId) {
-      $url .= '?client_id=' . $this->clientId;
-    }
     return $url;
   }
 
-  public function request($endpoint, $method = 'GET', $params = array())
+  public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
   {
-    $url = $this->getApiUrl($endpoint);
-    $response = Eyeem_Http::request($url, $method, $params);
+    $request = array(
+      'url'         => $this->getApiUrl($endpoint),
+      'method'      => $method,
+      'params'      => $params,
+      'clientId'    => $this->getClientId(),
+      'accessToken' => $authenticated || $method != 'GET' ? $this->getAccessToken() : null
+    );
+    $response = Eyeem_Http::request($request);
     $array = json_decode($response['body'], true);
     if ($response['code'] >= 400) {
       throw new Eyeem_Exception($array['message'], $response['code']);
@@ -50,13 +51,28 @@ class Eyeem
     return $array;
   }
 
-  public function getRessourceObject($ressourceName, $infos = array())
+  public function authenticatedRequest($endpoint, $method = 'GET', $params = array(), $authenticated = true)
+  {
+    return $this->request($endpoint, $method, $params, $authenticated);
+  }
+
+  public function getRessourceObject($ressourceName, $ressource = array())
   {
     // Support getUser('me')
-    if ($ressourceName == 'user' && is_string($infos) && $infos == 'me') { return $this->getAuthUser(); }
+    if ($ressourceName == 'user' && is_string($ressource) && $ressource == 'me') { return $this->getAuthUser(); }
     // Normal Behavior
     $classname = 'Eyeem_' . ucfirst($ressourceName);
-    $object = new $classname($infos);
+    // If ressource is already an object
+    if (is_object($ressource)) {
+      if ($ressource instanceof $classname) {
+        $object = $ressource;
+      } else {
+        throw new Exception("Ressource object not a $classname.");
+      }
+    // If ressource is a string or an array or whatever
+    } else {
+      $object = new $classname($ressource);
+    }
     $object->setEyeem($this);
     return $object;
   }
@@ -68,12 +84,14 @@ class Eyeem
     if ($accessToken = $this->getAccessToken()) {
       $cacheKey = 'user' . '_' . $accessToken;
       if (!$user = Eyeem_Cache::get($cacheKey)) {
-        $response = $this->request('/auth/ok');
+        $response = $this->authenticatedRequest('/users/me');
         $user = $response['user'];
         Eyeem_Cache::set($cacheKey, $user);
       }
-      return $this->getRessourceObject('user', $user);
+      return $this->getRessourceObject('authUser', $user);
     }
+    // Return Exception or NULL?
+    throw new Eyeem_Exception('User is not autenticated.', 401);
   }
 
   public function login($email, $password)
