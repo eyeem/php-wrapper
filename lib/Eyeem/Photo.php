@@ -41,6 +41,7 @@ class Eyeem_Photo extends Eyeem_Ressource
   {
     $endpoint = $this->getEndpoint() . '/likers/me';
     $this->request($endpoint, 'PUT');
+    $this->flushCollection('likers');
     return true;
   }
 
@@ -48,6 +49,7 @@ class Eyeem_Photo extends Eyeem_Ressource
   {
     $endpoint = $this->getEndpoint() . '/likers/me';
     $this->request($endpoint, 'DELETE');
+    $this->flushCollection('likers');
     return true;
   }
 

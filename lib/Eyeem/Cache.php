@@ -45,8 +45,7 @@ class Eyeem_Cache
 
     // Memcache
     if (self::$memcache) {
-      $return = self::$memcache->set($key, $value, false, $ttl);
-      return $return;
+      return self::$memcache->set($key, $value, false, $ttl);
     }
 
     // Filecache
@@ -59,6 +58,29 @@ class Eyeem_Cache
     if (function_exists('apc_store')) {
       $value = serialize($value);
       return apc_store($key, $value, $ttl);
+    }
+  }
+
+  public static function delete($key)
+  {
+    echo "Eyeem_Cache:delete:$key\n";
+    $key = md5($key);
+    // echo "Eyeem_Cache:delete:md5:$key\n";
+
+    // Memcache
+    if (self::$memcache) {
+      return self::$memcache->delete($key);
+    }
+
+    // Filecache
+    $filecache = self::getFilecache($key);
+    if (file_exists($filecache)) {
+      return unlink($filecache);
+    }
+
+    // APC
+    if (function_exists('apc_delete')) {
+      return apc_delete($key);
     }
   }
 

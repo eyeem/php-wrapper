@@ -92,6 +92,21 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     return $value;
   }
 
+  public function flushCache()
+  {
+    $params = $this->getParams();
+    $cacheKey = $this->getCacheKey($params);
+    Eyeem_Cache::delete($cacheKey);
+  }
+
+  public function flush()
+  {
+    $this->flushCache();
+    $this->flushItems();
+    $this->flushTotal();
+    $this->getParentRessource()->flushCollection($this->name);
+  }
+
   public function getRessourceObject($ressource)
   {
     return $this->getParentRessource()->getRessourceObject($this->type, $ressource);
@@ -100,6 +115,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
   public function post($params = array())
   {
     $response = $this->getEyeem()->request($this->getEndpoint(), 'POST', $params);
+    $this->flush();
     return $response;
   }
 
@@ -130,6 +146,13 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
       $key = lcfirst(substr($name, 3));
       // Default (write object property)
       $this->$key = $arguments[0];
+      return $this;
+    }
+    // Flush methods
+    if (substr($name, 0, 5) == 'flush') {
+      $key = lcfirst(substr($name, 5));
+      // Default (write object property)
+      unset($this->$key);
       return $this;
     }
     throw new Exception("Unknown method ($name).");

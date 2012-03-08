@@ -57,13 +57,13 @@ class Eyeem_Ressource
     return static::$name;
   }
 
-  public function getCacheKey()
+  public function getCacheKey($ts = true)
   {
     if (empty($this->id)) {
       throw new Exception("Unknown id.");
     }
     $updated = $this->getUpdated('U');
-    return static::$name . '_' . $this->id . ($updated ? '_' . $updated : '');
+    return static::$name . '_' . $this->id . ($ts && $updated ? '_' . $updated : '');
   }
 
   public function getEndpoint()
@@ -87,7 +87,7 @@ class Eyeem_Ressource
   {
     // From Cache
     $cacheKey = $this->getCacheKey();
-    if (!$value = Eyeem_Cache::get($cacheKey)) {
+    if (!$cacheKey || !$value = Eyeem_Cache::get($cacheKey)) {
       // Fresh
       $name = $this->getName();
       $response = $this->request( $this->getEndpoint() );
@@ -95,9 +95,37 @@ class Eyeem_Ressource
         throw new Exception("Missing ressource in response ($name).");
       }
       $value = $response[$name];
-      Eyeem_Cache::set($cacheKey, $value, $this->getUpdated() ? 0 : null);
+      if ($cacheKey) {
+        Eyeem_Cache::set($cacheKey, $value, $this->getUpdated() ? 0 : null);
+      }
     }
     return $value;
+  }
+
+  public function updateCache($value)
+  {
+    $cacheKey = $this->getCacheKey();
+    Eyeem_Cache::set($cacheKey, $value);
+    $cacheKey = $this->getCacheKey(false);
+    Eyeem_Cache::set($cacheKey, $value);
+  }
+
+  public function flushCache()
+  {
+    $cacheKey = $this->getCacheKey();
+    Eyeem_Cache::delete($cacheKey);
+    $cacheKey = $this->getCacheKey(false);
+    Eyeem_Cache::delete($cacheKey);
+  }
+
+  public function flushCollection($name = null)
+  {
+    if ($name && isset(static::$collections[$name])) {
+      unset($this->$name);
+      $totalKey = 'total' . ucfirst($name);
+      unset($this->$totalKey);
+      $this->flushCache();
+    }
   }
 
   public function getRawArray()
@@ -133,17 +161,21 @@ class Eyeem_Ressource
     return $collection;
   }
 
+  public function save()
+  {
+    // TODO: implement saving an object
+  }
 
   public function update($params = array())
   {
     $response = $this->request($this->getEndpoint(), 'PUT', $params);
-    return true;
+    return $response;
   }
 
   public function delete()
   {
-    $this->request($this->getEndpoint(), 'DELETE');
-    return true;
+    $response = $this->request($this->getEndpoint(), 'DELETE');
+    return $response;
   }
 
   public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
@@ -178,6 +210,13 @@ class Eyeem_Ressource
       $key = lcfirst(substr($name, 3));
       // Default (write object property)
       $this->$key = $arguments[0];
+      return $this;
+    }
+    // Flush methods
+    if (substr($name, 0, 5) == 'flush') {
+      $key = lcfirst(substr($name, 5));
+      // Default (write object property)
+      if (isset($this->$key)) unset($this->$key);
       return $this;
     }
     throw new Exception("Unknown method ($name).");

@@ -56,21 +56,19 @@ class Eyeem
     return $this->request($endpoint, $method, $params, $authenticated);
   }
 
-  public function getRessourceObject($ressourceName, $ressource = array())
+  public function getRessourceObject($type, $ressource = array())
   {
     // Support getUser('me')
-    if ($ressourceName == 'user' && is_string($ressource) && $ressource == 'me') { return $this->getAuthUser(); }
+    if ($type == 'user' && is_string($ressource) && $ressource == 'me') { return $this->getAuthUser(); }
     // Normal Behavior
-    $classname = 'Eyeem_' . ucfirst($ressourceName);
-    // If ressource is already an object
-    if (is_object($ressource)) {
+    $classname = 'Eyeem_' . ucfirst($type);
+    if (is_object($ressource)) { // if ressource is already an object
       if ($ressource instanceof $classname) {
         $object = $ressource;
       } else {
         throw new Exception("Ressource object not a $classname.");
       }
-    // If ressource is a string or an array or whatever
-    } else {
+    } else { // if ressource is a string or an array or whatever
       $object = new $classname($ressource);
     }
     $object->setEyeem($this);
@@ -82,16 +80,9 @@ class Eyeem
   public function getAuthUser()
   {
     if ($accessToken = $this->getAccessToken()) {
-      $cacheKey = 'user' . '_' . $accessToken;
-      if (!$user = Eyeem_Cache::get($cacheKey)) {
-        $response = $this->authenticatedRequest('/users/me');
-        $user = $response['user'];
-        Eyeem_Cache::set($cacheKey, $user);
-      }
-      return $this->getRessourceObject('authUser', $user);
+      return $this->getRessourceObject('authUser');
     }
-    // Return Exception or NULL?
-    throw new Eyeem_Exception('User is not autenticated.', 401);
+    throw new Eyeem_Exception('User is not autenticated (no Access Token set).', 401);
   }
 
   public function login($email, $password)
