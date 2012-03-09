@@ -39,4 +39,11 @@ class Eyeem_Comment extends Eyeem_Ressource
     return $this->getRessourceObject('photo', $this->getPhotoId());
   }
 
+  public function delete()
+  {
+    parent::delete();
+    $this->getPhoto()->flushCollecion('comments');
+    return true;
+  }
+
 }

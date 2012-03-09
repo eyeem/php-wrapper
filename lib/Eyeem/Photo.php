@@ -35,6 +35,17 @@ class Eyeem_Photo extends Eyeem_Ressource
     return $this->getRessourceObject('user', $user);
   }
 
+  public function get()
+  {
+    $params = array('includeComments' => false, 'includeLikers' => false, 'includeAlbums' => false);
+    $name = $this->getName();
+    $response = $this->request($this->getEndpoint(), 'GET', $params);
+    if (empty($response[$name])) {
+      throw new Exception("Missing ressource in response ($name).");
+    }
+    return $response[$name];
+  }
+
   // For Authenticated Users
 
   public function like()

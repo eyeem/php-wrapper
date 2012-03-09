@@ -57,13 +57,17 @@ class Eyeem_Ressource
     return static::$name;
   }
 
-  public function getCacheKey($ts = true)
+  public function getCacheKey($ts = true, $params = array())
   {
     if (empty($this->id)) {
       throw new Exception("Unknown id.");
     }
     $updated = $this->getUpdated('U');
-    return static::$name . '_' . $this->id . ($ts && $updated ? '_' . $updated : '');
+    $cacheKey = static::$name . '_' . $this->id . ($ts && $updated ? '_' . $updated : '');
+    if (!empty($params)) {
+      $cacheKey .= '_' . http_build_query($params);
+    }
+    return $cacheKey;
   }
 
   public function getEndpoint()
@@ -83,18 +87,29 @@ class Eyeem_Ressource
     }
   }
 
+  public function get()
+  {
+    $name = $this->getName();
+    $response = $this->request( $this->getEndpoint() );
+    if (empty($response[$name])) {
+      throw new Exception("Missing ressource in response ($name).");
+    }
+    return $response[$name];
+  }
+
+  public function getParams()
+  {
+    return array();
+  }
+
   public function getRessource()
   {
     // From Cache
-    $cacheKey = $this->getCacheKey();
+    $params = $this->getParams();
+    $cacheKey = $this->getCacheKey(true, $params);
     if (!$cacheKey || !$value = Eyeem_Cache::get($cacheKey)) {
       // Fresh
-      $name = $this->getName();
-      $response = $this->request( $this->getEndpoint() );
-      if (empty($response[$name])) {
-        throw new Exception("Missing ressource in response ($name).");
-      }
-      $value = $response[$name];
+      $value = $this->get();
       if ($cacheKey) {
         Eyeem_Cache::set($cacheKey, $value, $this->getUpdated() ? 0 : null);
       }

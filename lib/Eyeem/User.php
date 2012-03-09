@@ -34,14 +34,18 @@ class Eyeem_User extends Eyeem_Ressource
     'feed' => 'album'
   );
 
-  public function getCacheKey($ts = true)
+  public function getCacheKey($ts = true, $params = array())
   {
     if (empty($this->id)) {
       throw new Exception("Unknown id.");
     }
     $id = $this->id == 'me' ? $this->getEyeem()->getAccessToken() : $this->id;
     $updated = $this->getUpdated('U');
-    return static::$name . '_' . $id . ($updated ? '_' . $updated : '');
+    $cacheKey =  static::$name . '_' . $id . ($updated ? '_' . $updated : '');
+    if (!empty($params)) {
+      $cacheKey .= '_' . http_build_query($params);
+    }
+    return $cacheKey;
   }
 
   public function getFriendsPhotos($params = array())
