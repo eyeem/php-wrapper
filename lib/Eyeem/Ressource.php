@@ -175,7 +175,7 @@ class Eyeem_Ressource
   public function delete()
   {
     $response = $this->request($this->getEndpoint(), 'DELETE');
-    return $response;
+    return true;
   }
 
   public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
