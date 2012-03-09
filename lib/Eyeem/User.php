@@ -34,7 +34,7 @@ class Eyeem_User extends Eyeem_Ressource
     'feed' => 'album'
   );
 
-  public function getCacheKey()
+  public function getCacheKey($ts = true)
   {
     if (empty($this->id)) {
       throw new Exception("Unknown id.");

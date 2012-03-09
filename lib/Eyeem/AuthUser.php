@@ -23,7 +23,7 @@ class Eyeem_AuthUser extends Eyeem_User
     return $this->id;
   }
 
-  public function getCacheKey()
+  public function getCacheKey($ts = true)
   {
     if ($accessToken = $this->getEyeem()->getAccessToken()) {
       return 'user' . '_' . $accessToken;
