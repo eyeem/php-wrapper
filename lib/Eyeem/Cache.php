@@ -63,7 +63,7 @@ class Eyeem_Cache
 
   public static function delete($key)
   {
-    echo "Eyeem_Cache:delete:$key\n";
+    // echo "Eyeem_Cache:delete:$key\n";
     $key = md5($key);
     // echo "Eyeem_Cache:delete:md5:$key\n";
 
