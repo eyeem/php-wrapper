@@ -32,8 +32,10 @@ class Eyeem_AuthUser extends Eyeem_User
 
   public function flushCache()
   {
-    $cacheKey = $this->getCacheKey();
-    Eyeem_Cache::delete($cacheKey);
+    // First flush User cache
+    Eyeem_Cache::delete( parent::getCacheKey() );
+    // Then flush AuthUser cache
+    Eyeem_Cache::delete( $this->getCacheKey() );
   }
 
   public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
@@ -55,6 +57,17 @@ class Eyeem_AuthUser extends Eyeem_User
     $endpoint = $this->getEndpoint() . '/followings/' . $user->getId();
     $response = $this->request($endpoint, 'DELETE');
     return $response;
+  }
+
+  public function update($params = array())
+  {
+    $response = $this->request($this->getEndpoint(), 'POST', $params);
+    $this->setInfos($response['user']);
+    $this->updateCache($response['user']);
+    // Flush Public User cache
+    // we can't just update it because it may contains private informations at this point
+    Eyeem_Cache::delete( parent::getCacheKey() );
+    return $this;
   }
 
 }
