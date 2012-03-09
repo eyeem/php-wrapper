@@ -119,18 +119,22 @@ class Eyeem_Ressource
 
   public function updateCache($value)
   {
-    $cacheKey = $this->getCacheKey();
-    Eyeem_Cache::set($cacheKey, $value);
+    $cacheKeyTs = $this->getCacheKey();
+    Eyeem_Cache::set($cacheKeyTs, $value);
     $cacheKey = $this->getCacheKey(false);
-    Eyeem_Cache::set($cacheKey, $value);
+    if ($cacheKey != $cacheKeyTs) {
+      Eyeem_Cache::set($cacheKey, $value);
+    }
   }
 
   public function flushCache()
   {
-    $cacheKey = $this->getCacheKey();
-    Eyeem_Cache::delete($cacheKey);
+    $cacheKeyTs = $this->getCacheKey();
+    Eyeem_Cache::delete($cacheKeyTs);
     $cacheKey = $this->getCacheKey(false);
-    Eyeem_Cache::delete($cacheKey);
+    if ($cacheKey != $cacheKeyTs) {
+      Eyeem_Cache::delete($cacheKey);
+    }
   }
 
   public function flushCollection($name = null)
