@@ -3,11 +3,13 @@
 class Eyeem_AuthUser extends Eyeem_User
 {
 
-  public static $endpoint = '/users/me';
-
   public function getEndpoint()
   {
-    return static::$endpoint;
+    if (empty($this->id)) {
+      return str_replace('{id}', 'me', static::$endpoint);
+    } else {
+      return str_replace('{id}', $this->id, static::$endpoint);
+    }
   }
 
   /* Special case for this endpoint because ID is not passed to construct the object */
