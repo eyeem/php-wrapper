@@ -17,8 +17,7 @@ class Eyeem_AuthUser extends Eyeem_User
   public function getId()
   {
     if (empty($this->id)) {
-      $infos = $this->getInfos();
-      $this->id = $infos['id'];
+      $this->id = $this->getAttribute('id');
     }
     return $this->id;
   }
@@ -47,6 +46,7 @@ class Eyeem_AuthUser extends Eyeem_User
     return parent::request($endpoint, $method, $params, true);
   }
 
+  /*
   public function follow($user)
   {
     $user = $this->getEyeem()->getUser($user);
@@ -62,11 +62,12 @@ class Eyeem_AuthUser extends Eyeem_User
     $response = $this->request($endpoint, 'DELETE');
     return $response;
   }
+  */
 
   public function update($params = array())
   {
     $response = $this->request($this->getEndpoint(), 'POST', $params);
-    $this->setInfos($response['user']);
+    $this->setAttributes($response['user']);
     $this->updateCache($response['user']);
     // Flush Public User cache
     // we can't just update it because it may contains private informations at this point

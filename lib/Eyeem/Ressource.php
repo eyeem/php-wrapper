@@ -23,50 +23,71 @@ class Eyeem_Ressource
 
   public $updated;
 
-  public function __construct($infos = array())
+  protected $_attributes = array();
+
+  protected $_ressource = null;
+
+  public function __construct($params = array())
   {
-    if (is_int($infos) || is_string($infos)) {
-      $this->id = $infos;
+    if (is_int($params) || is_string($params)) {
+      $this->id = $params;
     }
-    if (is_array($infos)) {
-      $this->setInfos($infos);
+    if (is_array($params)) {
+      $this->setAttributes($params);
     }
   }
 
-  public function setInfos($infos = array())
+  public function setAttributes($infos = array())
   {
     foreach ($infos as $key => $value) {
-      if (in_array($key, static::$properties)) {
+      // Special Attributes
+      if ($key == 'id' || $key == 'updated') {
         $this->$key = $value;
-      }
-      if (isset(static::$collections[$key])) {
-        $this->$key = $value;
+        $this->_attributes[$key] = $value;
+      } elseif (in_array($key, static::$properties)) {
+        // $this->$key = $value;
+        $this->_attributes[$key] = $value;
+      } elseif (isset(static::$collections[$key])) {
+        // $this->$key = $value;
+        $this->_attributes[$key] = $value;
       }
     }
   }
 
+  public function getAttributes($force = false)
+  {
+    if (empty($this->_attributes) || $force) {
+      $attributes = $this->getRessource();
+      $this->setAttributes($attributes);
+    }
+    return $this->_attributes;
+  }
+
+  public function getAttribute($key)
+  {
+    $attributes = $this->getAttributes();
+    if (isset($attributes[$key])) {
+      return $attributes[$key];
+    }
+    $attributes = $this->getAttributes(true);
+    if (isset($attributes[$key])) {
+      return $attributes[$key];
+    }
+  }
+
+  /* deprecated */
   public function getInfos()
   {
-    $infos = $this->getRessource();
-    $this->setInfos($infos);
-    return $infos;
+    return $this->getAttributes(true);
   }
 
-  public function getName()
-  {
-    return static::$name;
-  }
-
-  public function getCacheKey($ts = true, $params = array())
+  public function getCacheKey($ts = true)
   {
     if (empty($this->id)) {
       throw new Exception("Unknown id.");
     }
     $updated = $this->getUpdated('U');
     $cacheKey = static::$name . '_' . $this->id . ($ts && $updated ? '_' . $updated : '');
-    if (!empty($params)) {
-      $cacheKey .= '_' . http_build_query($params);
-    }
     return $cacheKey;
   }
 
@@ -89,7 +110,7 @@ class Eyeem_Ressource
 
   public function get()
   {
-    $name = $this->getName();
+    $name = static::$name;
     $response = $this->request( $this->getEndpoint() );
     if (empty($response[$name])) {
       throw new Exception("Missing ressource in response ($name).");
@@ -97,16 +118,14 @@ class Eyeem_Ressource
     return $response[$name];
   }
 
-  public function getParams()
-  {
-    return array();
-  }
-
   public function getRessource()
   {
+    // Local Cache
+    if (isset($this->_ressource)) {
+      return $this->_ressource;
+    }
     // From Cache
-    $params = $this->getParams();
-    $cacheKey = $this->getCacheKey(true, $params);
+    $cacheKey = $this->getCacheKey(true);
     if (!$cacheKey || !$value = Eyeem_Cache::get($cacheKey)) {
       // Fresh
       $value = $this->get();
@@ -114,11 +133,12 @@ class Eyeem_Ressource
         Eyeem_Cache::set($cacheKey, $value, $this->getUpdated() ? 0 : null);
       }
     }
-    return $value;
+    return $this->_ressource = $value;
   }
 
   public function updateCache($value)
   {
+    $this->_ressource = $value;
     $cacheKeyTs = $this->getCacheKey();
     Eyeem_Cache::set($cacheKeyTs, $value);
     $cacheKey = $this->getCacheKey(false);
@@ -129,6 +149,7 @@ class Eyeem_Ressource
 
   public function flushCache()
   {
+    $this->_ressource = null;
     $cacheKeyTs = $this->getCacheKey();
     Eyeem_Cache::delete($cacheKeyTs);
     $cacheKey = $this->getCacheKey(false);
@@ -143,6 +164,7 @@ class Eyeem_Ressource
       unset($this->$name);
       $totalKey = 'total' . ucfirst($name);
       unset($this->$totalKey);
+      unset($this->_attributes[$totalKey]);
       $this->flushCache();
     }
   }
@@ -204,11 +226,14 @@ class Eyeem_Ressource
 
   public function __get($key)
   {
-    if (in_array($key, static::$properties)) {
-      $infos = $this->getInfos();
-      return $infos[$key];
+    if (!in_array($key, static::$properties)) {
+      throw new Exception("Unknown property ($key).");
     }
-    throw new Exception("Unknown property ($key).");
+    $value = $this->getAttribute($key);
+    if ($value === null) {
+      throw new Exception("Missing property ($key).");
+    }
+    return $value;
   }
 
   public function __call($name, $arguments)

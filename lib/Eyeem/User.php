@@ -99,7 +99,7 @@ class Eyeem_User extends Eyeem_Ressource
   public function update($params = array())
   {
     $response = $this->request($this->getEndpoint(), 'POST', $params);
-    $this->setInfos($response['user']);
+    $this->setAttributes($response['user']);
     $this->updateCache($response['user']);
     return $this;
   }
