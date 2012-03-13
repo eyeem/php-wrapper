@@ -40,6 +40,10 @@ List of photo collections:
 
 Example: ```foreach ($comments as $comment) { echo $comment->getMessage(); }```
 
+Post a comment: ```$photo->postComment('Nice Photo!');```
+
+Like/Unlike a photo: ```$photo->like();``` ```$photo->unlike();```
+
 User
 ----
 
@@ -57,6 +61,17 @@ List of user collections:
 
 Example: ```foreach ($user->getFriends() as $friend) { echo $friend->getFullname(); }```
 
+Follow/Unfollow an user: ```$user->follow();``` ```$user->unfollow();```
+
+Authenticated User
+------------------
+
+Extend the the user ressource.
+
+```$authUser = $eyeem->getAuthUser();```
+
+Update user informations: ```$authUser->update(array('fullname' => 'Santa Klaus'));```
+
 Album
 ------
 
@@ -71,6 +86,12 @@ List of album collections:
 
 Example: ```foreach ($album->getPhotos() as $photo) { echo $photo->getCaption(); }```
 
+Subscribe/Unsubscribe to an album: ```$album->subscribe();``` ```$album->unsubscribe();```
+
+Add an existing photo to an album: ```$album->postPhoto($photo);``` or ```$album->postPhoto('{photo_id_}');```
+
+Remove a photo from an album: ```$album->removePhoto($photo);``` or ```$album->removePhoto('{photo_id_}');```
+
 Comment
 -------
 
@@ -78,3 +99,19 @@ List of comment properties:
   'id', 'photoId', 'updated', 'message', 'user'
 
 ```$comment->getUser();``` return an user object.
+
+Delete a comment: ```$comment->delete();```
+
+Upload a photo
+--------------
+
+1 step:
+
+```$photo = $eyeem->postPhoto(array('photo' => '@/home/me/a-nice-photo.jpg', 'caption' => 'A nice photo.'));```
+
+2 steps:
+
+```
+$filename = $eyeem->uploadPhoto('/home/me/a-nice-photo.jpg');
+$photo = $eyeem->postPhoto(array('filename' => $filename, 'caption' => 'A nice photo.'));
+```
