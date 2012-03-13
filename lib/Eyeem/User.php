@@ -80,6 +80,22 @@ class Eyeem_User extends Eyeem_Ressource
     return true;
   }
 
+  // For Authenticated Users
+
+  public function follow()
+  {
+    $endpoint = $this->getEndpoint() . '/followers/me';
+    $response = $this->request($endpoint, 'PUT');
+    return $response;
+  }
+
+  public function unfollow()
+  {
+    $endpoint = $this->getEndpoint() . '/followers/me';
+    $response = $this->request($endpoint, 'DELETE');
+    return $response;
+  }
+
   public function update($params = array())
   {
     $response = $this->request($this->getEndpoint(), 'POST', $params);
