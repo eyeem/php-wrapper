@@ -5,6 +5,8 @@ class Eyeem
 
   public $baseUrl = 'https://www.eyeem.com/api/v2';
 
+  public $authorizeUrl = 'https://www.eyeem.com/oauth/authorize';
+
   public $clientId = null;
 
   public $clientSecret = null;
@@ -101,17 +103,39 @@ class Eyeem
 
   // oAuth
 
-  public function getLoginUrl()
+  public function getLoginUrl($redirect_uri = null)
   {
-    $clientId = $this->getClientId();
-    return Eyeem_OAuth2::getLoginUrl($clientId);
+    if (empty($redirect_uri)) {
+      $redirect_uri = Eyeem_Utils::getCurrentUrl();
+    }
+    $params = array(
+      'client_id' => $this->getClientId(),
+      'response_type' => 'code',
+      'redirect_uri' => $redirect_uri
+    );
+    $url = $this->getAuthorizeUrl() . '?' . http_build_query($params);
+    return $url;
   }
 
-  public function getToken($code)
+  public function getToken($code, $redirect_uri = null)
   {
-    $clientId = $this->getClientId();
-    $clientSecret = $this->getClientSecret();
-    return Eyeem_OAuth2::getAccessToken($code, $clientId, $clientSecret);
+    if (empty($redirect_uri)) {
+      $redirect_uri = Eyeem_Utils::getCurrentUrl();
+    }
+    $params = array(
+      'code' => $code,
+      'client_id' => $this->getClientId(),
+      'client_secret' => $this->getClientSecret(),
+      'grant_type' => 'authorization_code',
+      'redirect_uri' => $redirect_uri
+    );
+    $url = $this->getApiUrl('/oauth/token') . '?' . http_build_query($params);
+    $response = Eyeem_Http::get($url);
+    $token = json_decode($response, true);
+    if (isset($token['error'])) {
+      throw new Exception($token['error_description']);
+    }
+    return $token;
   }
 
   // Upload
