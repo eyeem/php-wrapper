@@ -114,6 +114,21 @@ class Eyeem
     return Eyeem_OAuth2::getAccessToken($code, $clientId, $clientSecret);
   }
 
+  // Upload
+
+  public function uploadPhoto($filename)
+  {
+    $params = array('photo' => "@$filename");
+    $response = $this->request('/photos/upload', 'POST', $params);
+    return $response['filename'];
+  }
+
+  public function postPhoto($params = array())
+  {
+    $response = $this->request('/photos', 'POST', $params);
+    return $this->getRessourceObject('photo', $response['photo']);
+  }
+
   public function __call($name, $arguments)
   {
     // Get methods

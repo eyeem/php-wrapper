@@ -74,4 +74,10 @@ class Eyeem_AuthUser extends Eyeem_User
     return $this;
   }
 
+  public function postPhoto($params = array())
+  {
+    $response = $this->getPhotos()->post($params);
+    return $this->getRessourceObject('photo', $response['photo']);
+  }
+
 }
