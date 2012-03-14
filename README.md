@@ -38,11 +38,9 @@ Or: ```foreach ($photo->getLikers() as $user) { echo $user->getFullname(); }```
 List of photo collections:
   'likers' (users), 'albums', 'comments'
 
-Example: ```foreach ($comments as $comment) { echo $comment->getMessage(); }```
-
 Post a comment: ```$photo->postComment('Nice Photo!');```
 
-Like/Unlike a photo: ```$photo->like();``` ```$photo->unlike();```
+Like/Unlike a photo: ```$photo->like();``` and ```$photo->unlike();```
 
 User
 ----
@@ -61,7 +59,7 @@ List of user collections:
 
 Example: ```foreach ($user->getFriends() as $friend) { echo $friend->getFullname(); }```
 
-Follow/Unfollow an user: ```$user->follow();``` ```$user->unfollow();```
+Follow/Unfollow an user: ```$user->follow();``` and ```$user->unfollow();```
 
 Authenticated User
 ------------------
@@ -86,11 +84,11 @@ List of album collections:
 
 Example: ```foreach ($album->getPhotos() as $photo) { echo $photo->getCaption(); }```
 
-Subscribe/Unsubscribe to an album: ```$album->subscribe();``` ```$album->unsubscribe();```
+Subscribe/Unsubscribe to an album: ```$album->subscribe();``` and ```$album->unsubscribe();```
 
-Add an existing photo to an album: ```$album->postPhoto($photo);``` or ```$album->postPhoto('{photo_id_}');```
+Add an existing photo to an album: ```$album->addPhoto($photo);``` and ```$album->addPhoto('{photo_id_}');```
 
-Remove a photo from an album: ```$album->removePhoto($photo);``` or ```$album->removePhoto('{photo_id_}');```
+Remove a photo from an album: ```$album->removePhoto($photo);``` and ```$album->removePhoto('{photo_id_}');```
 
 Comment
 -------

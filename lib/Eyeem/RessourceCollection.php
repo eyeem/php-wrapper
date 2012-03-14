@@ -32,6 +32,8 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     'numContributors'
   );
 
+  protected $_collection = null;
+
   public function setProperties($params = array())
   {
     foreach ($params as $key => $value) {
@@ -77,11 +79,17 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     return $params;
   }
 
-  public function getCollection()
+  protected function _getCollection()
   {
+    // Local Cache
+    if (isset($this->_collection)) {
+      return $this->_collection;
+    }
+    // From Cache?
     $params = $this->getParams();
     $cacheKey = $this->getCacheKey($params);
     if (!$value = Eyeem_Cache::get($cacheKey)) {
+      // Fresh!
       $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params);
       if (empty($response[$this->name])) {
         throw new Exception("Missing collection in response ($this->name).");
@@ -89,11 +97,12 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
       $value = $response[$this->name];
       Eyeem_Cache::set($cacheKey, $value);
     }
-    return $value;
+    return $this->_collection = $value;
   }
 
   public function flushCache()
   {
+    $this->_collection = null;
     $params = $this->getParams();
     $cacheKey = $this->getCacheKey($params);
     Eyeem_Cache::delete($cacheKey);
@@ -112,6 +121,59 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     return $this->getParentRessource()->getRessourceObject($this->type, $ressource);
   }
 
+  public function hasMember($member)
+  {
+    $member = $this->getRessourceObject($member);
+
+    // Optimised version up to LIMIT total likers
+    if ($this->getTotal() < $this->getLimit()) {
+      foreach ($this->getItems() as $item) {
+        if ($item['id'] == $member->getId()) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // Direct Version
+    $endpoint = $this->getEndpoint() . '/' . $member->getId();
+    try {
+      $response = $this->getEyeem()->request($endpoint, 'GET');
+      // TODO: test response in case it's not an exception
+      return true;
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+
+  public function add($member)
+  {
+    return $this->addMember($member);
+  }
+
+  public function addMember($member)
+  {
+    $member = $this->getRessourceObject($member);
+    $endpoint = $this->getEndpoint() . '/' . $member->getId();
+    $response = $this->getEyeem()->request($endpoint, 'PUT');
+    $this->flush();
+    return $this;
+  }
+
+  public function remove($member)
+  {
+    return $this->removeMember($member);
+  }
+
+  public function removeMember($member)
+  {
+    $member = $this->getRessourceObject($member);
+    $endpoint = $this->getEndpoint() . '/' . $member->getId();
+    $response = $this->getEyeem()->request($endpoint, 'DELETE');
+    $this->flush();
+    return $this;
+  }
+
   public function post($params = array())
   {
     $response = $this->getEyeem()->request($this->getEndpoint(), 'POST', $params);
@@ -127,7 +189,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
   public function __get($key)
   {
     if (in_array($key, static::$properties)) {
-      $collection = $this->getCollection();
+      $collection = $this->_getCollection();
       return $collection[$key];
     }
     throw new Exception("Unknown property ($key).");

@@ -31,35 +31,33 @@ class Eyeem_Album extends Eyeem_Ressource
 
   public function subscribe()
   {
-    $endpoint = $this->getEndpoint() . '/likers/me';
-    $this->request($endpoint, 'PUT');
-    $this->flushCollection('likers');
-    return true;
+    $me = $this->getEyeem()->getAuthUser();
+    $this->getLikers()->add($me);
+    $me->getLikedAlbums()->flush();
+    return $this;
   }
 
   public function unsubscribe()
   {
-    $endpoint = $this->getEndpoint() . '/likers/me';
-    $this->request($endpoint, 'DELETE');
-    $this->flushCollection('likers');
-    return true;
+    $me = $this->getEyeem()->getAuthUser();
+    $this->getLikers()->remove($me);
+    $me->getLikedAlbums()->flush();
+    return $this;
   }
 
-  public function postPhoto($photo)
+  public function addPhoto($photo)
   {
     $photo = $this->getEyeem()->getPhoto($photo);
-    $this->getPhotos()->post(array('photo_id' => $photo->getId()));
-    $photo->flushCollection('albums');
+    $this->getPhotos()->add($photo);
+    $photo->getAlbums()->flush();
     return $this;
   }
 
   public function removePhoto($photo)
   {
     $photo = $this->getEyeem()->getPhoto($photo);
-    $endpoint = $this->getEndpoint() . '/photos/' . $photo->getId();
-    $this->request($endpoint, 'DELETE');
-    $this->flushCollection('photos');
-    $photo->flushCollection('albums');
+    $this->getPhotos()->remove($photo);
+    $photo->getAlbums()->flush();
     return $this;
   }
 

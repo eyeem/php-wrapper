@@ -57,7 +57,7 @@ class Eyeem_Ressource
   public function getAttributes($force = false)
   {
     if (empty($this->_attributes) || $force) {
-      $attributes = $this->getRessource();
+      $attributes = $this->_getRessource();
       $this->setAttributes($attributes);
     }
     return $this->_attributes;
@@ -118,16 +118,16 @@ class Eyeem_Ressource
     return $response[$name];
   }
 
-  public function getRessource()
+  protected function _getRessource()
   {
     // Local Cache
     if (isset($this->_ressource)) {
       return $this->_ressource;
     }
-    // From Cache
+    // From Cache?
     $cacheKey = $this->getCacheKey(true);
     if (!$cacheKey || !$value = Eyeem_Cache::get($cacheKey)) {
-      // Fresh
+      // Fresh!
       $value = $this->get();
       if ($cacheKey) {
         Eyeem_Cache::set($cacheKey, $value, $this->getUpdated() ? 0 : null);
@@ -171,7 +171,7 @@ class Eyeem_Ressource
 
   public function getRawArray()
   {
-    return $this->getRessource();
+    return $this->_getRessource();
   }
 
   public function getRessourceObject($type, $infos = array())

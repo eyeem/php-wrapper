@@ -46,22 +46,36 @@ class Eyeem_Photo extends Eyeem_Ressource
     return $response[$name];
   }
 
+  // Helper to get a Thumb Url
+
+  public function getThumbUrl($width = 'h', $height = '100')
+  {
+    $thumbUrl = $this->thumbUrl;
+    if ($height != '100') {
+      $thumbUrl = str_replace('/thumb/h/100/', "/thumb/h/100/$height/", $thumbUrl);
+    }
+    if ($width != 'h') {
+      $thumbUrl = str_replace('/thumb/h/', "/thumb/$width/", $thumbUrl);
+    }
+    return $thumbUrl;
+  }
+
   // For Authenticated Users
 
   public function like()
   {
-    $endpoint = $this->getEndpoint() . '/likers/me';
-    $this->request($endpoint, 'PUT');
-    $this->flushCollection('likers');
-    return true;
+    $me = $this->getEyeem()->getAuthUser();
+    $this->getLikers()->add($me);
+    $me->getLikedPhotos()->flush();
+    return $this;
   }
 
   public function unlike()
   {
-    $endpoint = $this->getEndpoint() . '/likers/me';
-    $this->request($endpoint, 'DELETE');
-    $this->flushCollection('likers');
-    return true;
+    $me = $this->getEyeem()->getAuthUser();
+    $this->getLikers()->remove($me);
+    $me->getLikedAlbums()->flush();
+    return $this;
   }
 
   public function postComment($params = array())
@@ -71,6 +85,22 @@ class Eyeem_Photo extends Eyeem_Ressource
     }
     $response = $this->getComments()->post($params);
     return $this->getRessourceObject('comment', $response['comment']);
+  }
+
+  public function addAlbum($album)
+  {
+    $album = $this->getEyeem()->getAlbum($album);
+    $this->getAlbums()->add($album);
+    $album->getPhotos()->flush();
+    return $this;
+  }
+
+  public function removeAlbum($album)
+  {
+    $album = $this->getEyeem()->getAlbum($album);
+    $this->getAlbums()->remove($album);
+    $album->getPhotos()->flush();
+    return $this;
   }
 
 }

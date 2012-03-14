@@ -46,24 +46,6 @@ class Eyeem_AuthUser extends Eyeem_User
     return parent::request($endpoint, $method, $params, true);
   }
 
-  /*
-  public function follow($user)
-  {
-    $user = $this->getEyeem()->getUser($user);
-    $endpoint = $this->getEndpoint() . '/followings/' . $user->getId();
-    $response = $this->request($endpoint, 'PUT');
-    return $response;
-  }
-
-  public function unfollow($user)
-  {
-    $user = $this->getEyeem()->getUser($user);
-    $endpoint = $this->getEndpoint() . '/followings/' . $user->getId();
-    $response = $this->request($endpoint, 'DELETE');
-    return $response;
-  }
-  */
-
   public function update($params = array())
   {
     $response = $this->request($this->getEndpoint(), 'POST', $params);
@@ -73,12 +55,6 @@ class Eyeem_AuthUser extends Eyeem_User
     // we can't just update it because it may contains private informations at this point
     Eyeem_Cache::delete( parent::getCacheKey() );
     return $this;
-  }
-
-  public function postPhoto($params = array())
-  {
-    $response = $this->getPhotos()->post($params);
-    return $this->getRessourceObject('photo', $response['photo']);
   }
 
 }

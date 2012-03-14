@@ -58,42 +58,43 @@ class Eyeem_User extends Eyeem_Ressource
 
   public function isFollowing($user)
   {
-    $user = $this->getEyeem()->getUser($user);
-    $endpoint = $this->getEndpoint() . '/friends/' . $user->getId();
-    try {
-      $response = $this->getEyeem()->request($endpoint, 'GET');
-    } catch (Exception $e) {
-      return false;
-    }
-    return true;
+    return $this->getFriends()->hasMember($user);
   }
 
   public function isFollowedBy($user)
   {
-    $user = $this->getEyeem()->getUser($user);
-    $endpoint = $this->getEndpoint() . '/followers/' . $user->getId();
-    try {
-      $response = $this->getEyeem()->request($endpoint, 'GET');
-    } catch (Exception $e) {
-      return false;
-    }
-    return true;
+    return $this->getFollowers()->hasMember($user);
+  }
+
+  public function ownsPhoto($photo)
+  {
+    $photo = $this->getEyeem()->getPhoto($photo);
+    $userId = $photo->getUser()->getId();
+    return $userId = $this->getId();
+  }
+
+  public function likesPhoto($photo)
+  {
+    $photo = $this->getEyeem()->getPhoto($photo);
+    return $photo->getLikers()->hasMember($this);
   }
 
   // For Authenticated Users
 
   public function follow()
   {
-    $endpoint = $this->getEndpoint() . '/followers/me';
-    $response = $this->request($endpoint, 'PUT');
-    return $response;
+    $me = $this->getEyeem()->getAuthUser();
+    $this->getFollowers()->add($me);
+    $me->getFriends()->flush();
+    return $this;
   }
 
   public function unfollow()
   {
-    $endpoint = $this->getEndpoint() . '/followers/me';
-    $response = $this->request($endpoint, 'DELETE');
-    return $response;
+    $me = $this->getEyeem()->getAuthUser();
+    $this->getFollowers()->remove($me);
+    $me->getFriends()->flush();
+    return $this;
   }
 
   public function update($params = array())

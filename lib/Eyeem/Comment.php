@@ -42,7 +42,7 @@ class Eyeem_Comment extends Eyeem_Ressource
   public function delete()
   {
     parent::delete();
-    $this->getPhoto()->flushCollecion('comments');
+    $this->getPhoto()->getComments()->flush();
     return true;
   }
 

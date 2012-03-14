@@ -13,6 +13,8 @@ class Eyeem
 
   public $accessToken = null;
 
+  protected $_authUser = null;
+
   protected $_ressources = array(
     'user', 'album', 'photo', 'comment',
   );
@@ -81,8 +83,11 @@ class Eyeem
 
   public function getAuthUser()
   {
+    if (isset($this->_authUser)) {
+      return $this->_authUser;
+    }
     if ($accessToken = $this->getAccessToken()) {
-      return $this->getRessourceObject('authUser');
+      return $this->_authUser = $this->getRessourceObject('authUser');
     }
     throw new Eyeem_Exception('User is not autenticated (no Access Token set).', 401);
   }
