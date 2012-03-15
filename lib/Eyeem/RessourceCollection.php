@@ -146,12 +146,12 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     }
   }
 
-  public function add($member)
+  public function getLatest()
   {
-    return $this->addMember($member);
+    return $this->get(0);
   }
 
-  public function addMember($member)
+  public function add($member)
   {
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
@@ -161,11 +161,6 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
   }
 
   public function remove($member)
-  {
-    return $this->removeMember($member);
-  }
-
-  public function removeMember($member)
   {
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
