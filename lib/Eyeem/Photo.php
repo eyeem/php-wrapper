@@ -52,7 +52,7 @@ class Eyeem_Photo extends Eyeem_Ressource
   {
     $thumbUrl = $this->thumbUrl;
     if ($height != '100') {
-      $thumbUrl = str_replace('/thumb/h/100/', "/thumb/h/100/$height/", $thumbUrl);
+      $thumbUrl = str_replace('/thumb/h/100/', "/thumb/h/$height/", $thumbUrl);
     }
     if ($width != 'h') {
       $thumbUrl = str_replace('/thumb/h/', "/thumb/$width/", $thumbUrl);
