@@ -17,15 +17,21 @@ class Eyeem_Ressource
 
   public static $collections = array();
 
+  public static $parameters = array();
+
   /* Object Properties */
 
   public $id;
 
   public $updated;
 
+  protected $_ressource = null;
+
   protected $_attributes = array();
 
-  protected $_ressource = null;
+  protected $_collections = array();
+
+  protected $_queryParameters = array();
 
   public function __construct($params = array())
   {
@@ -75,6 +81,21 @@ class Eyeem_Ressource
     }
   }
 
+  public function getQueryParameters()
+  {
+    return $this->_queryParameters;
+  }
+
+  public function setQueryParameters($params = array())
+  {
+    foreach ($params as $key => $value) {
+      if (in_array($key, static::$parameters)) {
+        $this->_queryParameters[$key] = $value;
+      }
+    }
+    return $this;
+  }
+
   /* deprecated */
   public function getInfos()
   {
@@ -108,14 +129,28 @@ class Eyeem_Ressource
     }
   }
 
-  public function get()
+  public function fetch()
   {
     $name = static::$name;
-    $response = $this->request( $this->getEndpoint() );
+    $params = $this->getQueryParameters();
+    $response = $this->request($this->getEndpoint(), 'GET', $params);
+
     if (empty($response[$name])) {
       throw new Exception("Missing ressource in response ($name).");
     }
-    return $response[$name];
+    $result = $response[$name];
+
+    // Pre-load collections
+    foreach (static::$collections as $key => $type) {
+      if (isset($result[$key])) {
+        $collection = $this->getCollection($key, false);
+        $collection->setProperties($result[$key]);
+        // TODO: Fill cache with collections infos.
+        // TODO: Remove collections from result?
+      }
+    }
+
+    return $result;
   }
 
   protected function _getRessource()
@@ -128,7 +163,8 @@ class Eyeem_Ressource
     $cacheKey = $this->getCacheKey(true);
     if (!$cacheKey || !$value = Eyeem_Cache::get($cacheKey)) {
       // Fresh!
-      $value = $this->get();
+      $value = $this->fetch();
+      // Store ressource
       if ($cacheKey) {
         Eyeem_Cache::set($cacheKey, $value, $this->getUpdated() ? 0 : null);
       }
@@ -179,30 +215,39 @@ class Eyeem_Ressource
     return $this->getEyeem()->getRessourceObject($type, $infos);
   }
 
-  public function getCollection($name, $parameters = array())
+  public function getCollection($name, $autoload = true)
   {
-    $collection = new Eyeem_RessourceCollection();
-    // Collection name (match the name in URL: friendsPhotos, comments, likers, etc ...)
-    $collection->setName($name);
-    // Which kind of objects we are handling (user, album, photo, etc)
-    $collection->setType(static::$collections[$name]);
-    // Keep a link to the current object
-    $collection->setParentRessource($this);
-    // The query parameters (one of Eyeem_RessourceCollection::$parameters)
-    $collection->setParameters($parameters);
-    // If we have some properties already available (offset, limit, total, items)
-    if ($properties = $this->getAttribute($name)) {
-      $collection->setProperties($properties);
+    if (empty($this->_collections[$name])) {
+      $collection = new Eyeem_RessourceCollection();
+      // Collection name (match the name in URL: friendsPhotos, comments, likers, etc ...)
+      $collection->setName($name);
+      // Which kind of objects we are handling (user, album, photo, etc)
+      $collection->setType(static::$collections[$name]);
+      // Keep a link to the current object
+      $collection->setParentRessource($this);
+    } else {
+      $collection = $this->_collections[$name];
     }
-    // If we don't have the total in the collection properties
-    if (empty($properties['total'])) {
-      // But have it available as totalX property.
-      $totalKey = 'total' . ucfirst($name);
-      if ($total = $this->getAttribute($totalKey)) {
-        $collection->setTotal($total);
+
+    // The query parameters (one of Eyeem_RessourceCollection::$parameters)
+    // $collection->setQueryParameters($parameters);
+
+    if ($autoload == true) {
+      // If we have some properties already available (offset, limit, total, items)
+      if ($properties = $this->getAttribute($name)) {
+        $collection->setProperties($properties);
+      }
+      // If we don't have the total in the collection properties
+      if (empty($properties['total'])) {
+        // But have it available as totalX property.
+        $totalKey = 'total' . ucfirst($name);
+        if ($total = $this->getAttribute($totalKey)) {
+          $collection->setTotal($total);
+        }
       }
     }
-    return $collection;
+
+    return $this->_collections[$name] = $collection;
   }
 
   public function save()
@@ -247,7 +292,9 @@ class Eyeem_Ressource
       // Collection Objects
       if (isset(static::$collections[$key])) {
         $parameters = isset($arguments[0]) ? $arguments[0] : array();
-        return $this->getCollection($key, $parameters);
+        $collection = $this->getCollection($key);
+        $collection->setQueryParameters($parameters);
+        return $collection;
       }
       // Default (read object property)
       return $this->$key;

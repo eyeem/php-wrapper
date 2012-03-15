@@ -34,6 +34,8 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
 
   protected $_collection = null;
 
+  protected $queryParameters = array();
+
   public function setProperties($params = array())
   {
     foreach ($params as $key => $value) {
@@ -43,11 +45,11 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     }
   }
 
-  public function setParameters($params = array())
+  public function setQueryParameters($params = array())
   {
     foreach ($params as $key => $value) {
       if (in_array($key, static::$parameters)) {
-        $this->$key = $value;
+        $this->queryParameters[$key] = $value;
       }
     }
   }
@@ -68,17 +70,6 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     return $cacheKey;
   }
 
-  public function getParams()
-  {
-    $params = array();
-    foreach (static::$parameters as $key) {
-      if (isset($this->$key)) {
-        $params[$key] = $this->$key;
-      }
-    }
-    return $params;
-  }
-
   protected function _getCollection()
   {
     // Local Cache
@@ -86,7 +77,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
       return $this->_collection;
     }
     // From Cache?
-    $params = $this->getParams();
+    $params = $this->getQueryParameters();
     $cacheKey = $this->getCacheKey($params);
     if (!$value = Eyeem_Cache::get($cacheKey)) {
       // Fresh!
@@ -103,7 +94,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
   public function flushCache()
   {
     $this->_collection = null;
-    $params = $this->getParams();
+    $params = $this->getQueryParameters();
     $cacheKey = $this->getCacheKey($params);
     Eyeem_Cache::delete($cacheKey);
   }

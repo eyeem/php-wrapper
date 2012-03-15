@@ -29,21 +29,26 @@ class Eyeem_Photo extends Eyeem_Ressource
     'comments' => 'comment'
   );
 
+  public static $parameters = array(
+    'detailed',
+    'includeComments',
+    'numComments',
+    'includeLikers',
+    'numLikers',
+    'includeAlbums',
+    'numAlbums'
+  );
+
+  protected $_queryParameters = array(
+    'includeComments' => false,
+    'includeLikers' => false,
+    'includeAlbums' => false
+  );
+
   public function getUser()
   {
     $user = parent::getUser();
     return $this->getRessourceObject('user', $user);
-  }
-
-  public function get()
-  {
-    $name = static::$name;
-    $params = array('includeComments' => false, 'includeLikers' => false, 'includeAlbums' => false);
-    $response = $this->request($this->getEndpoint(), 'GET', $params);
-    if (empty($response[$name])) {
-      throw new Exception("Missing ressource in response ($name).");
-    }
-    return $response[$name];
   }
 
   // Helper to get a Thumb Url
