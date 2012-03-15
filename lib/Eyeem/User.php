@@ -69,8 +69,7 @@ class Eyeem_User extends Eyeem_Ressource
   public function ownsPhoto($photo)
   {
     $photo = $this->getEyeem()->getPhoto($photo);
-    $userId = $photo->getUser()->getId();
-    return $userId = $this->getId();
+    return $photo->getUser()->getId() == $this->getId();
   }
 
   public function likesPhoto($photo)
