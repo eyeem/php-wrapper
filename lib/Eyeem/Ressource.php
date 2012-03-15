@@ -191,13 +191,16 @@ class Eyeem_Ressource
     // The query parameters (one of Eyeem_RessourceCollection::$parameters)
     $collection->setParameters($parameters);
     // If we have some properties already available (offset, limit, total, items)
-    if (isset($this->$name)) {
-      $collection->setProperties($this->$name);
+    if ($properties = $this->getAttribute($name)) {
+      $collection->setProperties($properties);
     }
-    // If we have the total already available
-    $totalKey = 'total' . ucfirst($name);
-    if (isset($this->$totalKey)) {
-      $collection->setTotal($this->$totalKey);
+    // If we don't have the total in the collection properties
+    if (empty($properties['total'])) {
+      // But have it available as totalX property.
+      $totalKey = 'total' . ucfirst($name);
+      if ($total = $this->getAttribute($totalKey)) {
+        $collection->setTotal($total);
+      }
     }
     return $collection;
   }
