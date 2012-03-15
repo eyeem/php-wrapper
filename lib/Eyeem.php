@@ -70,7 +70,8 @@ class Eyeem
       if ($ressource instanceof $classname) {
         $object = $ressource;
       } else {
-        throw new Exception("Ressource object not a $classname.");
+        $class = get_class($ressource);
+        throw new Exception("Ressource object not a $classname ($class).");
       }
     } else { // if ressource is a string or an array or whatever
       $object = new $classname($ressource);
