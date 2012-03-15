@@ -11,7 +11,7 @@ class Eyeem_Cache
 
   public static function get($key)
   {
-    // echo "Eyeem_Cache:get:$key\n";
+    Eyeem_Log::log("Eyeem_Cache:get:$key");
     $key = md5($key);
     // echo "Eyeem_Cache:get:md5:$key\n";
 
@@ -39,7 +39,8 @@ class Eyeem_Cache
   public static function set($key, $value, $ttl = null)
   {
     $ttl = isset($ttl) ? $ttl : self::$ttl;
-    // echo "Eyeem_Cache:set:$ttl:$key\n";
+
+    Eyeem_Log::log("Eyeem_Cache:set:$key:$ttl");
     $key = md5($key);
     // echo "Eyeem_Cache:set:md5:$key:$ttl\n";
 
@@ -63,7 +64,7 @@ class Eyeem_Cache
 
   public static function delete($key)
   {
-    // echo "Eyeem_Cache:delete:$key\n";
+    Eyeem_Log::log("Eyeem_Cache:delete:$key");
     $key = md5($key);
     // echo "Eyeem_Cache:delete:md5:$key\n";
 

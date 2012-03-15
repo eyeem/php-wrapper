@@ -48,6 +48,7 @@ class Eyeem_Http
           $headers[] = "Content-Length:0";
         }
       }
+      Eyeem_Log::log("Eyeem_Http:$method:$url");
       curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_HEADER, false);
