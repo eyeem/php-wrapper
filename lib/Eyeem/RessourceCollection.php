@@ -122,8 +122,13 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
       }
     }
 
-    $collection = $this->_getCollection();
-    return $collection['items'];
+    if (!isset($this->items)) {
+      $collection = $this->_getCollection();
+      return $this->items = $collection['items'];
+    }
+
+    return $this->items;
+  }
   }
 
   public function flushCache()
@@ -220,7 +225,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
   {
     if (in_array($key, static::$properties)) {
       $collection = $this->_getCollection();
-      return (false === empty($collection[$key]));
+      return false === empty($collection[$key]);
     }
   }
 
