@@ -50,7 +50,7 @@ class Eyeem
     $response = Eyeem_Http::request($request);
     $array = json_decode($response['body'], true);
     if ($response['code'] >= 400) {
-      throw new Eyeem_Exception($array['message'], $response['code']);
+      throw new Exception($array['message'], $response['code']);
     }
     return $array;
   }
@@ -90,7 +90,7 @@ class Eyeem
     if ($accessToken = $this->getAccessToken()) {
       return $this->_authUser = $this->getRessourceObject('authUser');
     }
-    throw new Eyeem_Exception('User is not autenticated (no Access Token set).', 401);
+    throw new Exception('User is not autenticated (no Access Token set).', 401);
   }
 
   public function login($email, $password)
