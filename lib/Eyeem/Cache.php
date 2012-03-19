@@ -13,7 +13,7 @@ class Eyeem_Cache
   {
     Eyeem_Log::log("Eyeem_Cache:get:$key");
     $key = md5($key);
-    // echo "Eyeem_Cache:get:md5:$key\n";
+    // Eyeem_Log::log("Eyeem_Cache:get:md5:$key");
 
     // Memcache
     if (self::$memcache) {
@@ -42,7 +42,7 @@ class Eyeem_Cache
 
     Eyeem_Log::log("Eyeem_Cache:set:$key:$ttl");
     $key = md5($key);
-    // echo "Eyeem_Cache:set:md5:$key:$ttl\n";
+    // Eyeem_Log::log("Eyeem_Cache:set:md5:$key");
 
     // Memcache
     if (self::$memcache) {
@@ -66,7 +66,7 @@ class Eyeem_Cache
   {
     Eyeem_Log::log("Eyeem_Cache:delete:$key");
     $key = md5($key);
-    // echo "Eyeem_Cache:delete:md5:$key\n";
+    // Eyeem_Log::log("Eyeem_Cache:delete:md5:$key");
 
     // Memcache
     if (self::$memcache) {

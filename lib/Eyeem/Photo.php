@@ -108,4 +108,16 @@ class Eyeem_Photo extends Eyeem_Ressource
     return $this;
   }
 
+  public function delete()
+  {
+    $this->getUser()->getPhotos()->flush();
+    foreach ($this->getAlbums() as $album) {
+      $album->getPhotos()->flush();
+    }
+    foreach ($this->getLikers() as $liker) {
+      $liker->getLikedPhotos()->flush();
+    }
+    return parent::delete();
+  }
+
 }

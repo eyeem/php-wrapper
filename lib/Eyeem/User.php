@@ -50,10 +50,10 @@ class Eyeem_User extends Eyeem_Ressource
 
   public function getFriendsPhotos($params = array())
   {
-    /* Fix wrong defaults in API */
-    $default_params = array('detailed' => false, 'includeComments' => false, 'includeLikers' => false);
+    /* Fix defaults in API */
+    $default_params = array('includeComments' => false, 'includeLikers' => false);
     $params = array_merge($default_params, $params);
-    return $this->getCollection('friendsPhotos', $params);
+    return $this->getCollection('friendsPhotos')->setQueryParameters($params);
   }
 
   public function isFollowing($user)
@@ -76,6 +76,12 @@ class Eyeem_User extends Eyeem_Ressource
   {
     $photo = $this->getEyeem()->getPhoto($photo);
     return $photo->getLikers()->hasMember($this);
+  }
+
+  public function likesAlbum($album)
+  {
+    $album = $this->getEyeem()->getAlbum($album);
+    return $album->getLikers()->hasMember($this);
   }
 
   // For Authenticated Users
@@ -102,6 +108,12 @@ class Eyeem_User extends Eyeem_Ressource
     $this->setAttributes($response['user']);
     $this->updateCache($response['user']);
     return $this;
+  }
+
+  public function postPhoto($params = array())
+  {
+    $response = $this->getPhotos()->post($params);
+    return $this->getRessourceObject('photo', $response['photo']);
   }
 
 }

@@ -27,7 +27,23 @@ class Eyeem_Album extends Eyeem_Ressource
     'contributors' => 'user'
   );
 
+  public static $parameters = array(
+    'detailed',
+    'includePhotos',
+    'numPhotos',
+    'includeContributors',
+    'numContributors',
+    'includeLikers',
+    'numLikers',
+    'photoDetails'
+  );
+
   // For Authenticated Users
+
+  public function like()
+  {
+    return $this->subscribe();
+  }
 
   public function subscribe()
   {
@@ -35,6 +51,11 @@ class Eyeem_Album extends Eyeem_Ressource
     $this->getLikers()->add($me);
     $me->getLikedAlbums()->flush();
     return $this;
+  }
+
+  public function unlike()
+  {
+    return $this->unsubscribe();
   }
 
   public function unsubscribe()

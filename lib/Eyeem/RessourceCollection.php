@@ -34,7 +34,10 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
 
   protected $_collection = null;
 
-  protected $queryParameters = array();
+  protected $queryParameters = array(
+    'detailed' => true,
+    'offset' => 0
+  );
 
   public function setProperties($params = array())
   {
@@ -43,6 +46,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
         $this->$key = $value;
       }
     }
+    return $this;
   }
 
   public function setQueryParameters($params = array())
@@ -52,6 +56,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
         $this->queryParameters[$key] = $value;
       }
     }
+    return $this;
   }
 
   public function getEndpoint()
@@ -78,6 +83,7 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     }
     // From Cache?
     $params = $this->getQueryParameters();
+    unset($params['limit']);
     $cacheKey = $this->getCacheKey($params);
     if (!$value = Eyeem_Cache::get($cacheKey)) {
       // Fresh!
@@ -91,12 +97,50 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     return $this->_collection = $value;
   }
 
+  public function getItems()
+  {
+    // Do we have the right items?
+    if (isset($this->queryParameters['offset']) && $this->getOffset() !== null) {
+      if ($this->queryParameters['offset'] != $this->getOffset()) {
+        $this->flushAttributes();
+      }
+    }
+    if (isset($this->queryParameters['limit']) && $this->getLimit() !== null) {
+      if ($this->queryParameters['limit'] > $this->getLimit()) {
+        $this->flushAttributes();
+      }
+    }
+
+    // Do we have the expected sub-collections?
+    foreach (array('comments', 'likers', 'photos', 'albums', 'contributors') as $cname) {
+      $keyname = 'include' . ucfirst($cname);
+      if (!empty($this->queryParameters[$keyname]) && !empty($this->items)) {
+        $first = $this->items[0];
+        if (empty($first[$cname])) {
+          $this->flushAttributes();
+        }
+      }
+    }
+
+    $collection = $this->_getCollection();
+    return $collection['items'];
+  }
+
   public function flushCache()
   {
     $this->_collection = null;
     $params = $this->getQueryParameters();
     $cacheKey = $this->getCacheKey($params);
     Eyeem_Cache::delete($cacheKey);
+  }
+
+  public function flushAttributes()
+  {
+    $this->_collection = null;
+    $this->flushItems();
+    $this->flushTotal();
+    $this->flushOffset();
+    $this->flushLimit();
   }
 
   public function flush()
@@ -170,6 +214,14 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
   public function getEyeem()
   {
     return $this->getParentRessource()->getEyeem();
+  }
+
+  public function __isset($key)
+  {
+    if (in_array($key, static::$properties)) {
+      $collection = $this->_getCollection();
+      return (false === empty($collection[$key]));
+    }
   }
 
   public function __get($key)

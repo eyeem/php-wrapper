@@ -37,6 +37,9 @@ class Eyeem_Collection implements Iterator
     if (!isset($this->_items)) {
       $this->_items = $this->getItems();
     }
+    if (isset($this->queryParameters['limit']) && $this->_index >= $this->queryParameters['limit']) {
+      return false;
+    }
     return isset($this->_items[$this->_index]);
   }
 
@@ -46,10 +49,11 @@ class Eyeem_Collection implements Iterator
       $this->_items = $this->getItems();
     }
     $item = $this->_items[$index];
-    if (empty($this->_objects[$index])) {
-      $this->_objects[$index] = $this->getRessourceObject($item);
+    $id = $item['id'];
+    if (empty($this->_objects[$id])) {
+      $this->_objects[$id] = $this->getRessourceObject($item);
     }
-    return $this->_objects[$index];
+    return $this->_objects[$id];
   }
 
 }

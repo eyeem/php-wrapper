@@ -229,9 +229,6 @@ class Eyeem_Ressource
       $collection = $this->_collections[$name];
     }
 
-    // The query parameters (one of Eyeem_RessourceCollection::$parameters)
-    // $collection->setQueryParameters($parameters);
-
     if ($autoload == true) {
       // If we have some properties already available (offset, limit, total, items)
       if ($properties = $this->getAttribute($name)) {

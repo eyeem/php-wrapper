@@ -166,7 +166,6 @@ class Eyeem
       $key = lcfirst(substr($name, 3));
       // Ressource Objects
       if (in_array($key, $this->_ressources)) {
-        // TODO: change syntax to allow more than one argument
         return $this->getRessourceObject($key, $arguments[0]);
       }
       // Default (read object property)
