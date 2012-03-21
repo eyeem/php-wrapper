@@ -1,6 +1,6 @@
 <?php
 
-class Eyeem_Collection implements Iterator
+class Eyeem_CollectionIterator implements Iterator
 {
 
   protected $_index = 0;

@@ -1,6 +1,6 @@
 <?php
 
-class Eyeem_RessourceCollection extends Eyeem_Collection
+class Eyeem_RessourceCollection extends Eyeem_CollectionIterator
 {
 
   public $name;
