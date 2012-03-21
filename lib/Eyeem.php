@@ -107,6 +107,12 @@ class Eyeem
     return $this;
   }
 
+  public function signUp($email, $password)
+  {
+    $this->request('/auth/signUp', 'POST', compact('email', 'password'));
+    return $this->login($email, $password);
+  }
+
   // oAuth
 
   public function getLoginUrl($redirect_uri = null)
