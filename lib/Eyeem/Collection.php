@@ -13,6 +13,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public $type;
 
+  public $endpoint;
+
   public static $properties = array(
     'offset',
     'limit',
@@ -24,6 +26,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     'offset',
     'limit',
     'detailed',
+    // Sub-Collections
     'includeComments',
     'numComments',
     'includeLikers',
@@ -34,6 +37,10 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     'numAlbums',
     'includeContributors',
     'numContributors'
+    // Search
+    'q',
+    'minPhotos',
+    'albumType'
   );
 
   protected $_collection = null;
@@ -65,7 +72,10 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public function getEndpoint()
   {
-    return '/' . $this->name;
+    if (empty($this->endpoint)) {
+      return '/' . $this->name;
+    }
+    return $this->endpoint;
   }
 
   public function getCacheKey($params = array())
@@ -77,6 +87,16 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     return $cacheKey;
   }
 
+  protected function _fetchCollection()
+  {
+    $params = $this->getQueryParameters();
+    $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params);
+    if (empty($response[$this->name])) {
+      throw new Exception("Missing collection in response ($this->name).");
+    }
+    return $response[$this->name];
+  }
+
   protected function _getCollection()
   {
     // Local Cache
@@ -85,15 +105,10 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     }
     // From Cache?
     $params = $this->getQueryParameters();
-    unset($params['limit']);
     $cacheKey = $this->getCacheKey($params);
     if (!$value = Eyeem_Cache::get($cacheKey)) {
       // Fresh!
-      $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params);
-      if (empty($response[$this->name])) {
-        throw new Exception("Missing collection in response ($this->name).");
-      }
-      $value = $response[$this->name];
+      $value = $this->_fetchCollection();
       Eyeem_Cache::set($cacheKey, $value);
     }
     return $this->_collection = $value;

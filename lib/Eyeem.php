@@ -165,6 +165,24 @@ class Eyeem
     return $this->getRessourceObject('photo', $response['photo']);
   }
 
+  // Search
+
+  public function searchAlbums($query = '', $params = array())
+  {
+    $collection = new Eyeem_Collection();
+    $collection->setType('album');
+    $collection->setName('albums');
+    $collection->setEyeem($this);
+
+    /* Fix defaults in API */
+    $default_params = array('includePhotos' => false);
+    $params = array_merge($default_params, $params);
+    $params['q'] = $query;
+    $collection->setQueryParameters($params);
+
+    return $collection;
+  }
+
   public function __call($name, $arguments)
   {
     // Get methods
