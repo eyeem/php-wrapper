@@ -90,6 +90,8 @@ Add an existing photo to an album: ```$album->addPhoto($photo);``` and ```$album
 
 Remove a photo from an album: ```$album->removePhoto($photo);``` and ```$album->removePhoto('{photo_id_}');```
 
+Search albums: ```foreach ($eyeem->searchAlbums('berlin') as $album) { echo $album->getName(); }```
+
 Comment
 -------
 
