@@ -3,11 +3,15 @@
 class Eyeem_Collection extends Eyeem_CollectionIterator
 {
 
+  /* Context */
+
+  protected $eyeem = null;
+
+  /* Object Properties */
+
   public $name;
 
   public $type;
-
-  protected $parentRessource;
 
   public static $properties = array(
     'offset',
@@ -61,14 +65,12 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public function getEndpoint()
   {
-    $parentEndpoint = $this->getParentRessource()->getEndpoint();
-    return $parentEndpoint . '/' . $this->name;
+    return '/' . $this->name;
   }
 
   public function getCacheKey($params = array())
   {
-    $parent = $this->getParentRessource();
-    $cacheKey = $parent::$name . '_' . $parent->getId() . '_' . $this->name;
+    $cacheKey = $this->name;
     if (!empty($params)) {
       $cacheKey .= '_' . http_build_query($params);
     }
@@ -129,7 +131,6 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
     return $this->items;
   }
-  }
 
   public function flushCache()
   {
@@ -153,12 +154,11 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $this->flushCache();
     $this->flushItems();
     $this->flushTotal();
-    $this->getParentRessource()->flushCollection($this->name);
   }
 
   public function getRessourceObject($ressource)
   {
-    return $this->getParentRessource()->getRessourceObject($this->type, $ressource);
+    return $this->getEyeem()->getRessourceObject($this->type, $ressource);
   }
 
   public function hasMember($member)
@@ -214,11 +214,6 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $response = $this->getEyeem()->request($this->getEndpoint(), 'POST', $params);
     $this->flush();
     return $response;
-  }
-
-  public function getEyeem()
-  {
-    return $this->getParentRessource()->getEyeem();
   }
 
   public function __isset($key)
