@@ -58,4 +58,38 @@ class Eyeem_AuthUser extends Eyeem_User
     return $this;
   }
 
+  /* Social Media */
+
+  public function getSocialMedia()
+  {
+    $user = $this->getRawArray();
+    if (isset($user['services'])) {
+      return array('services' => $user['services']);
+    }
+    return $this->request($this->getEndpoint() . '/socialMedia');
+  }
+
+  public function socialMediaConnect($service, $params = array())
+  {
+    $params['connect'] = 1;
+    $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'POST', $params);
+    return $result;
+  }
+
+  public function socialMediaDisconnect($service)
+  {
+    $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'DELETE');
+    $this->flushCache();
+    return $result;
+  }
+
+  public function socialMediaCallback($service, $params = array())
+  {
+    $params['callback'] = 1;
+    $params = http_build_query($params);
+    $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'POST', $params);
+    $this->flushCache();
+    return $result;
+  }
+
 }
