@@ -36,6 +36,7 @@ class Eyeem_AuthUser extends Eyeem_User
   public function flushCache()
   {
     // First flush User cache
+    $this->id = $this->getId();
     Eyeem_Cache::delete( parent::getCacheKey() );
     // Then flush AuthUser cache
     Eyeem_Cache::delete( $this->getCacheKey() );
