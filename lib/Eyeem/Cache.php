@@ -58,7 +58,9 @@ class Eyeem_Cache
     // APC
     if (function_exists('apc_store')) {
       $value = serialize($value);
-      return apc_store($key, $value, $ttl);
+      apc_delete($key);
+      $result = apc_store($key, $value, $ttl);
+      return $result;
     }
   }
 
