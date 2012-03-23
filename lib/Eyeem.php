@@ -183,6 +183,19 @@ class Eyeem
     return $collection;
   }
 
+  public function searchUsers($query = '', $params = array())
+  {
+    $collection = new Eyeem_Collection();
+    $collection->setType('user');
+    $collection->setName('users');
+    $collection->setEyeem($this);
+
+    $params['q'] = $query;
+    $collection->setQueryParameters($params);
+
+    return $collection;
+  }
+
   public function __call($name, $arguments)
   {
     // Get methods

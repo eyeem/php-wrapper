@@ -61,6 +61,8 @@ Example: ```foreach ($user->getFriends() as $friend) { echo $friend->getFullname
 
 Follow/Unfollow an user: ```$user->follow();``` and ```$user->unfollow();```
 
+Search users: ```foreach ($eyeem->searchUsers('ramz') as $user) { echo $user->getFullname(); }```
+
 Authenticated User
 ------------------
 
