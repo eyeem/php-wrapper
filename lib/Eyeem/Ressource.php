@@ -275,9 +275,6 @@ class Eyeem_Ressource
       throw new Exception("Unknown property ($key).");
     }
     $value = $this->getAttribute($key);
-    if ($value === null) {
-      throw new Exception("Missing property ($key).");
-    }
     return $value;
   }
 
