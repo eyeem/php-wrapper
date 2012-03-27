@@ -32,7 +32,8 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'likedPhotos' => 'photo',
     'friendsPhotos' => 'photo',
     'feed' => 'album',
-    'apps' => 'app'
+    'apps' => 'app',
+    'linkedApps' => 'app'
   );
 
   public function getCacheKey($ts = true, $params = array())
