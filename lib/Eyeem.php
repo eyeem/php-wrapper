@@ -65,7 +65,7 @@ class Eyeem
     // Support getUser('me')
     if ($type == 'user' && is_string($ressource) && $ressource == 'me') { return $this->getAuthUser(); }
     // Normal Behavior
-    $classname = 'Eyeem_' . ucfirst($type);
+    $classname = 'Eyeem_Ressource_' . ucfirst($type);
     if (is_object($ressource)) { // if ressource is already an object
       if ($ressource instanceof $classname) {
         $object = $ressource;

@@ -1,6 +1,6 @@
 <?php
 
-class Eyeem_User extends Eyeem_Ressource
+class Eyeem_Ressource_User extends Eyeem_Ressource
 {
 
   public static $name = 'user';

@@ -1,6 +1,6 @@
 <?php
 
-class Eyeem_Album extends Eyeem_Ressource
+class Eyeem_Ressource_Album extends Eyeem_Ressource
 {
 
   public static $name = 'album';

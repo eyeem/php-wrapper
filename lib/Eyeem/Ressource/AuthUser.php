@@ -1,6 +1,6 @@
 <?php
 
-class Eyeem_AuthUser extends Eyeem_User
+class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 {
 
   public function getEndpoint()
