@@ -31,7 +31,8 @@ class Eyeem_User extends Eyeem_Ressource
     'likedAlbums' => 'album',
     'likedPhotos' => 'photo',
     'friendsPhotos' => 'photo',
-    'feed' => 'album'
+    'feed' => 'album',
+    'apps' => 'app'
   );
 
   public function getCacheKey($ts = true, $params = array())
@@ -112,8 +113,7 @@ class Eyeem_User extends Eyeem_Ressource
 
   public function postPhoto($params = array())
   {
-    $response = $this->getPhotos()->post($params);
-    return $this->getRessourceObject('photo', $response['photo']);
+    return $this->getPhotos()->post($params);
   }
 
 }

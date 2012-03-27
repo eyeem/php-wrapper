@@ -58,6 +58,13 @@ class Eyeem_AuthUser extends Eyeem_User
     return $this;
   }
 
+  /* Apps */
+
+  public function getApps()
+  {
+    return $this->getCollection('apps')->setAuthenticated(true);
+  }
+
   /* Social Media */
 
   public function getSocialMedia()

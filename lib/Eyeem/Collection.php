@@ -15,6 +15,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public $endpoint;
 
+  public $authenticated = false;
+
   public static $properties = array(
     'offset',
     'limit',
@@ -90,7 +92,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   protected function _fetchCollection()
   {
     $params = $this->getQueryParameters();
-    $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params);
+    $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params, $this->getAuthenticated());
     if (empty($response[$this->name])) {
       throw new Exception("Missing collection in response ($this->name).");
     }
@@ -228,7 +230,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   {
     $response = $this->getEyeem()->request($this->getEndpoint(), 'POST', $params);
     $this->flush();
-    return $response;
+    return $this->getRessourceObject($response[$this->type]);
   }
 
   public function __isset($key)

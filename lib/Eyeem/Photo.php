@@ -88,8 +88,7 @@ class Eyeem_Photo extends Eyeem_Ressource
     if (is_string($params)) {
       $params = array('message' => $params);
     }
-    $response = $this->getComments()->post($params);
-    return $this->getRessourceObject('comment', $response['comment']);
+    return $this->getComments()->post($params);
   }
 
   public function addAlbum($album)
