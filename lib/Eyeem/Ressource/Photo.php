@@ -83,6 +83,17 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     return $this;
   }
 
+  public function share($params = array())
+  {
+    $me = $this->getEyeem()->getAuthUser();
+    if ($me && $this->getUser()->getId() == $me->getId()) {
+      $params['upload'] = true;
+    }
+    $params = http_build_query($params);
+    $result = $this->request($this->getEndpoint() . '/share', 'POST', $params);
+    return $this;
+  }
+
   public function postComment($params = array())
   {
     if (is_string($params)) {
