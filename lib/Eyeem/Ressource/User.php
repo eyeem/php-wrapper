@@ -77,13 +77,13 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function likesPhoto($photo)
   {
     $photo = $this->getEyeem()->getPhoto($photo);
-    return $photo->getLikers()->hasMember($this);
+    return $this->getLikedPhotos()->hasMember($photo);
   }
 
   public function likesAlbum($album)
   {
     $album = $this->getEyeem()->getAlbum($album);
-    return $album->getLikers()->hasMember($this);
+    return $this->getLikedAlbums()->hasMember($album);
   }
 
   // For Authenticated Users
