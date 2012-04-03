@@ -35,7 +35,8 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     'numContributors',
     'includeLikers',
     'numLikers',
-    'photoDetails'
+    'photoDetails',
+    'userDetails'
   );
 
   // For Authenticated Users

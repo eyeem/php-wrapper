@@ -235,9 +235,13 @@ class Eyeem_Ressource
         $collection->setProperties($properties);
       }
       // If we don't have the total in the collection properties
-      if (empty($properties['total'])) {
+      if (!isset($properties['total'])) {
         // But have it available as totalX property.
-        $totalKey = 'total' . ucfirst($name);
+        if (static::$name == 'photo' && $name = 'likers') {
+          $totalKey = 'totalLikes';
+        } else {
+          $totalKey = 'total' . ucfirst($name);
+        }
         if ($total = $this->getAttribute($totalKey)) {
           $collection->setTotal($total);
         }

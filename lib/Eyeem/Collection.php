@@ -39,6 +39,9 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     'numAlbums',
     'includeContributors',
     'numContributors',
+    // Details
+    'photoDetails',
+    'userDetails',
     // Search
     'q',
     'minPhotos',
