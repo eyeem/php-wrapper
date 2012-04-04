@@ -22,6 +22,10 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'totalLikedPhotos',
     'webUrl',
     'description'
+    /* Auth User */
+    'email',
+    'emailNotifications',
+    'pushNotifications'
   );
 
   public static $collections = array(
