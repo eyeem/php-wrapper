@@ -121,6 +121,12 @@ class Eyeem
     return $this;
   }
 
+  public function confirmEmail($token)
+  {
+    $this->request('/auth/confirmEmail', 'POST', compact('token'));
+    return $this;
+  }
+
   public function signUp($email, $password)
   {
     $this->request('/auth/signUp', 'POST', compact('email', 'password'));
