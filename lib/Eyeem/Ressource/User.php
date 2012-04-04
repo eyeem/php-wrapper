@@ -21,7 +21,7 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'totalLikedAlbums',
     'totalLikedPhotos',
     'webUrl',
-    'description'
+    'description',
     /* Auth User */
     'email',
     'emailNotifications',
