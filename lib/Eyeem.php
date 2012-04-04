@@ -107,6 +107,20 @@ class Eyeem
     return $this;
   }
 
+  public function facebookLogin($email, $password)
+  {
+    $response = $this->request('/auth/facebookLogin', 'POST', compact('email', 'password'));
+    $user = $response['user'];
+    $accessToken = $response['access_token'];
+    // Update Access Token
+    $this->setAccessToken($accessToken);
+    // Update User Cache
+    $cacheKey = 'user' . '_' . $accessToken;
+    Eyeem_Cache::set($cacheKey, $user);
+    // Return Eyeem for chainability
+    return $this;
+  }
+
   public function signUp($email, $password)
   {
     $this->request('/auth/signUp', 'POST', compact('email', 'password'));
