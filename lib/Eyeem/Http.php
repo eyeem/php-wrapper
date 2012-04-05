@@ -48,7 +48,8 @@ class Eyeem_Http
           $headers[] = "Content-Length:0";
         }
       }
-      Eyeem_Log::log("Eyeem_Http:$method:$url");
+      $time_start = microtime(true);
+      Eyeem_Log::log("Eyeem_Http:$method:$url start");
       curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
       curl_setopt($ch, CURLOPT_URL, $url);
       curl_setopt($ch, CURLOPT_HEADER, false);
@@ -58,6 +59,9 @@ class Eyeem_Http
       $body = curl_exec($ch);
       $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
       curl_close($ch);
+      $time_end = microtime(true);
+      $time = round($time_end - $time_start, 3);
+      Eyeem_Log::log("Eyeem_Http:$method:$url completed in $time");
     } else {
       throw new Exception('Curl not available.');
       /*
