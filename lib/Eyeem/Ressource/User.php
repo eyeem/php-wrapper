@@ -64,12 +64,14 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
 
   public function isFollowing($user)
   {
-    return $this->getFriends()->hasMember($user);
+    $user = $this->getEyeem()->getUser($user);
+    return $this->getFriends()->setQueryParameters(array('limit' => 200))->hasMember($user);
   }
 
   public function isFollowedBy($user)
   {
-    return $this->getFollowers()->hasMember($user);
+    $user = $this->getEyeem()->getUser($user);
+    return $this->getFollowers()->setQueryParameters(array('limit' => 200))->hasMember($user);
   }
 
   public function ownsPhoto($photo)
@@ -81,13 +83,13 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function likesPhoto($photo)
   {
     $photo = $this->getEyeem()->getPhoto($photo);
-    return $this->getLikedPhotos()->hasMember($photo);
+    return $this->getLikedPhotos()->setQueryParameters(array('limit' => 200))->hasMember($photo);
   }
 
   public function likesAlbum($album)
   {
     $album = $this->getEyeem()->getAlbum($album);
-    return $this->getLikedAlbums()->hasMember($album);
+    return $this->getLikedAlbums()->setQueryParameters(array('limit' => 200))->hasMember($album);
   }
 
   // For Authenticated Users
