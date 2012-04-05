@@ -39,6 +39,12 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     'userDetails'
   );
 
+  public function hasLiker($user)
+  {
+    $user = $this->getEyeem()->getUser($user);
+    return $this->getLikers()->hasMember($user);
+  }
+
   // For Authenticated Users
 
   public function like()
@@ -50,7 +56,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   {
     $me = $this->getEyeem()->getAuthUser();
     $this->getLikers()->add($me);
-    $me->getLikedAlbums()->flush();
+    $me->getLikedAlbums()->flushMember($this);
     return $this;
   }
 
@@ -63,7 +69,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   {
     $me = $this->getEyeem()->getAuthUser();
     $this->getLikers()->remove($me);
-    $me->getLikedAlbums()->flush();
+    $me->getLikedAlbums()->flushMember($this);
     return $this;
   }
 
@@ -71,7 +77,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   {
     $photo = $this->getEyeem()->getPhoto($photo);
     $this->getPhotos()->add($photo);
-    $photo->getAlbums()->flush();
+    $photo->getAlbums()->flushMember($this);
     return $this;
   }
 
@@ -79,7 +85,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   {
     $photo = $this->getEyeem()->getPhoto($photo);
     $this->getPhotos()->remove($photo);
-    $photo->getAlbums()->flush();
+    $photo->getAlbums()->flushMember($this);
     return $this;
   }
 

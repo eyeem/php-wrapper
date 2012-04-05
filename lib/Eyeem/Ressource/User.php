@@ -98,7 +98,7 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   {
     $me = $this->getEyeem()->getAuthUser();
     $this->getFollowers()->add($me);
-    $me->getFriends()->flush();
+    $me->getFriends()->flushMember($this);
     return $this;
   }
 
@@ -106,7 +106,7 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   {
     $me = $this->getEyeem()->getAuthUser();
     $this->getFollowers()->remove($me);
-    $me->getFriends()->flush();
+    $me->getFriends()->flushMember($this);
     return $this;
   }
 

@@ -186,7 +186,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $member = $this->getRessourceObject($member);
 
     // Optimised version up to LIMIT total likers
-    if ($this->getTotal() < $this->getLimit()) {
+    if ($this->getTotal() <= $this->getLimit()) {
+      // Eyeem_Log::log('Eyeem_Collection:' . $this->name . ':hasMember:optimised');
       foreach ($this->getItems() as $item) {
         if ($item['id'] == $member->getId()) {
           return true;
@@ -195,14 +196,42 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
       return false;
     }
 
+    // Trace
+    Eyeem_Log::log('Eyeem_Collection:' . $this->name . ':hasMember:total:' . $this->getTotal() . ':limit:' . $this->getLimit());
+
+    // From Cache
+    $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
+    if ($cacheKey) {
+      $value = Eyeem_Cache::get($cacheKey);
+      if ($value !== null) {
+        return $value;
+      }
+    }
+
     // Direct Version
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
+    Eyeem_Log::log('Eyeem_Collection:' . $this->name . ':hasMember:direct');
     try {
       $response = $this->getEyeem()->request($endpoint, 'GET');
-      // TODO: test response in case it's not an exception
-      return true;
+      $value = true;
     } catch (Exception $e) {
-      return false;
+      $value = false;
+    }
+
+    // Set Cache
+    if ($cacheKey) {
+      Eyeem_Cache::set($cacheKey, $value);
+    }
+
+    return $value;
+  }
+
+  public function flushMember($member)
+  {
+    $this->flush();
+    $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
+    if ($cacheKey) {
+      Eyeem_Cache::delete($cacheKey);
     }
   }
 
@@ -216,7 +245,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
     $response = $this->getEyeem()->request($endpoint, 'PUT');
-    $this->flush();
+    $this->flushMember($member);
     return $this;
   }
 
@@ -225,7 +254,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
     $response = $this->getEyeem()->request($endpoint, 'DELETE');
-    $this->flush();
+    $this->flushMember($member);
     return $this;
   }
 
