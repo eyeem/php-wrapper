@@ -66,6 +66,12 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     return $thumbUrl;
   }
 
+  public function hasLiker($user)
+  {
+    $user = $this->getEyeem()->getUser($user);
+    return $this->getLikers()->hasMember($user);
+  }
+
   // For Authenticated Users
 
   public function like()
