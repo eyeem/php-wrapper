@@ -238,7 +238,7 @@ class Eyeem_Ressource
       // If we don't have the total in the collection properties
       if (!isset($properties['total'])) {
         // But have it available as totalX property.
-        if (static::$name == 'photo' && $name = 'likers') {
+        if (static::$name == 'photo' && $name == 'likers') {
           $totalKey = 'totalLikes';
         } else {
           $totalKey = 'total' . ucfirst($name);
