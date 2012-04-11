@@ -185,6 +185,15 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   {
     $member = $this->getRessourceObject($member);
 
+    // From Cache
+    $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
+    if ($cacheKey) {
+      $value = Eyeem_Cache::get($cacheKey);
+      if ($value !== null) {
+        return $value;
+      }
+    }
+
     // Optimised version up to LIMIT total likers
     if ($this->getTotal() <= $this->getLimit()) {
       // Eyeem_Log::log('Eyeem_Collection:' . $this->name . ':hasMember:optimised');
@@ -198,15 +207,6 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
     // Trace
     Eyeem_Log::log('Eyeem_Collection:' . $this->name . ':hasMember:total:' . $this->getTotal() . ':limit:' . $this->getLimit());
-
-    // From Cache
-    $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
-    if ($cacheKey) {
-      $value = Eyeem_Cache::get($cacheKey);
-      if ($value !== null) {
-        return $value;
-      }
-    }
 
     // Direct Version
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
@@ -226,12 +226,16 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     return $value;
   }
 
-  public function flushMember($member)
+  public function flushMember($member, $value = null)
   {
     $this->flush();
     $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
     if ($cacheKey) {
-      Eyeem_Cache::delete($cacheKey);
+      if ($value === null) {
+        Eyeem_Cache::delete($cacheKey);
+      } else {
+        Eyeem_Cache::set($cacheKey, $value);
+      }
     }
   }
 
@@ -245,7 +249,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
     $response = $this->getEyeem()->request($endpoint, 'PUT');
-    $this->flushMember($member);
+    $this->flushMember($member, true);
     return $this;
   }
 
@@ -254,7 +258,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
     $response = $this->getEyeem()->request($endpoint, 'DELETE');
-    $this->flushMember($member);
+    $this->flushMember($member, false);
     return $this;
   }
 

@@ -78,7 +78,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
   {
     $me = $this->getEyeem()->getAuthUser();
     $this->getLikers()->add($me);
-    $me->getLikedPhotos()->flushMember($this);
+    $me->getLikedPhotos()->flushMember($this, true);
     return $this;
   }
 
@@ -86,7 +86,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
   {
     $me = $this->getEyeem()->getAuthUser();
     $this->getLikers()->remove($me);
-    $me->getLikedPhotos()->flushMember($this);
+    $me->getLikedPhotos()->flushMember($this, false);
     return $this;
   }
 
