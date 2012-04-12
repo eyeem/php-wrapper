@@ -41,6 +41,20 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     'userDetails'
   );
 
+  // Helper to get a Thumb Url
+
+  public function getThumbUrl($width = 'sq', $height = '200')
+  {
+    $thumbUrl = $this->thumbUrl;
+    if ($height != '200') {
+      $thumbUrl = str_replace('/thumb/sq/200/', "/thumb/sq/$height/", $thumbUrl);
+    }
+    if ($width != 'sq') {
+      $thumbUrl = str_replace('/thumb/sq/', "/thumb/$width/", $thumbUrl);
+    }
+    return $thumbUrl;
+  }
+
   public function hasLiker($user)
   {
     $user = $this->getEyeem()->getUser($user);
