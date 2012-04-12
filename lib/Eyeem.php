@@ -127,9 +127,20 @@ class Eyeem
     return $this;
   }
 
-  public function resetPassword($email)
+  public function requestPassword($email)
   {
-    $this->request('/auth/resetPassword', 'POST', compact('email'));
+    $this->request('/auth/requestPassword', 'POST', compact('email'));
+    return $this;
+  }
+
+  public function resetPassword($token, $password = null)
+  {
+    if (empty($password)) {
+      $response = $this->request('/auth/resetPassword', 'GET', compact('token'));
+      $user = $response['user'];
+      return $this->getUser($user);
+    }
+    $this->request('/auth/resetPassword', 'POST', compact('token', 'password'));
     return $this;
   }
 
