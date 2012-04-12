@@ -36,6 +36,8 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     'includeLikers',
     'numLikers',
     'photoDetails',
+    'photoLikers',
+    'photoComments',
     'userDetails'
   );
 
