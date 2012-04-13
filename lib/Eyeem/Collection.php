@@ -190,7 +190,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     if ($cacheKey) {
       $value = Eyeem_Cache::get($cacheKey);
       if ($value !== null) {
-        return $value;
+        return $value === 1 ? true : false;
       }
     }
 
@@ -220,7 +220,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
     // Set Cache
     if ($cacheKey) {
-      Eyeem_Cache::set($cacheKey, $value);
+      Eyeem_Cache::set($cacheKey, ($value === true ? 1 : 0));
     }
 
     return $value;
@@ -234,7 +234,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
       if ($value === null) {
         Eyeem_Cache::delete($cacheKey);
       } else {
-        Eyeem_Cache::set($cacheKey, $value);
+        Eyeem_Cache::set($cacheKey, ($value === true ? 1 : 0));
       }
     }
   }
