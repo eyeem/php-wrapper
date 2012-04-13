@@ -75,7 +75,7 @@ class Eyeem_Ressource
     if (isset($attributes[$key])) {
       return $attributes[$key];
     }
-    Eyeem_Log::log('Eyeem_Ressource:getAttribute:' . static::$name . ':' . $key);
+    // Eyeem_Log::log('Eyeem_Ressource:getAttribute:' . static::$name . ':' . $key);
     $attributes = $this->getAttributes(true);
     if (isset($attributes[$key])) {
       return $attributes[$key];
