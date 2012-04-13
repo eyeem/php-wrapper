@@ -18,6 +18,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     /* Detailed */
     'webUrl',
     'user',
+    'title',
     'caption',
     'totalLikes',
     'totalComments'
