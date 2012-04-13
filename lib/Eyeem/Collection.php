@@ -189,7 +189,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
     if ($cacheKey) {
       $value = Eyeem_Cache::get($cacheKey);
-      if ($value !== null) {
+      if ($value !== null && $value != '') {
         return $value === 1 ? true : false;
       }
     }
