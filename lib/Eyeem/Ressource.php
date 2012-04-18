@@ -82,6 +82,16 @@ class Eyeem_Ressource
     }
   }
 
+  public function isValid()
+  {
+    try {
+      $attributes = $this->getAttributes(true);
+      return true;
+    } catch (Exception $e) {
+      return false;
+    }
+  }
+
   public function getQueryParameters()
   {
     return $this->_queryParameters;

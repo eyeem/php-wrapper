@@ -12,16 +12,6 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     }
   }
 
-  /* Special case for this endpoint because ID is not passed to construct the object */
-
-  public function getId()
-  {
-    if (empty($this->id)) {
-      $this->id = $this->getAttribute('id');
-    }
-    return $this->id;
-  }
-
   public function getCacheKey($ts = true, $params = array())
   {
     if ($accessToken = $this->getEyeem()->getAccessToken()) {

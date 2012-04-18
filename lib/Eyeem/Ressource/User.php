@@ -40,6 +40,11 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'linkedApps' => 'app'
   );
 
+  public function getId()
+  {
+    return $this->id = $this->getAttribute('id');
+  }
+
   public function getCacheKey($ts = true, $params = array())
   {
     if (empty($this->id)) {
