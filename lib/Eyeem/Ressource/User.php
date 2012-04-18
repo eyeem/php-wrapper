@@ -42,6 +42,10 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
 
   public function getId()
   {
+    // Only Return Integer IDs
+    if (isset($this->id) && $int = (int)$this->id) {
+      return $this->id;
+    }
     return $this->id = $this->getAttribute('id');
   }
 
