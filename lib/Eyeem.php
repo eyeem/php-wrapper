@@ -16,7 +16,7 @@ class Eyeem
   protected $_authUser = null;
 
   protected $_ressources = array(
-    'user', 'album', 'photo', 'comment',
+    'user', 'album', 'photo', 'comment', 'app'
   );
 
   public static function autoload()
