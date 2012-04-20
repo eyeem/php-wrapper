@@ -18,7 +18,9 @@ class Eyeem_Cache
     // Memcache
     if (self::$memcache) {
       $value = self::$memcache->get($key);
-      return $value;
+      if (isset($value) && $value != '') {
+        return $value;
+      }
     }
 
     // Filecache
