@@ -18,9 +18,10 @@ class Eyeem_Cache
     // Memcache
     if (self::$memcache) {
       $value = self::$memcache->get($key);
-      if (isset($value) && $value != '') {
+      if (isset($value) && $value !== '' && $value !== false) {
         return $value;
       }
+      return null;
     }
 
     // Filecache
@@ -74,7 +75,7 @@ class Eyeem_Cache
 
     // Memcache
     if (self::$memcache) {
-      return self::$memcache->delete($key);
+      return self::$memcache->delete($key, 0);
     }
 
     // Filecache
