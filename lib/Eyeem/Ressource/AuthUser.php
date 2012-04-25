@@ -95,9 +95,8 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $result;
   }
 
-  public function setSocialMediaUpload($service, $upload = false)
+  public function socialMediaUpdate($service, $params = array())
   {
-    $params['upload'] = (bool)$upload;
     $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'PUT', $params);
     $this->flushCache();
     return $result;
