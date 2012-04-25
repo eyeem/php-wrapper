@@ -9,6 +9,8 @@ class Eyeem_Cache
 
   protected static $memcache;
 
+  protected static $apc;
+
   public static function get($key)
   {
     Eyeem_Log::log("Eyeem_Cache:get:$key");
@@ -33,7 +35,7 @@ class Eyeem_Cache
     }
 
     // APC
-    if (function_exists('apc_fetch')) {
+    if (self::$apc && function_exists('apc_fetch')) {
       $value = apc_fetch($key);
       return $value ? unserialize($value) : null;
     }
@@ -59,7 +61,7 @@ class Eyeem_Cache
     }
 
     // APC
-    if (function_exists('apc_store')) {
+    if (self::$apc && function_exists('apc_store')) {
       $value = serialize($value);
       apc_delete($key);
       $result = apc_store($key, $value, $ttl);
@@ -85,7 +87,7 @@ class Eyeem_Cache
     }
 
     // APC
-    if (function_exists('apc_delete')) {
+    if (self::$apc && function_exists('apc_delete')) {
       return apc_delete($key);
     }
   }
@@ -105,6 +107,11 @@ class Eyeem_Cache
   public static function setMemcache($memcache)
   {
     self::$memcache = $memcache;
+  }
+
+  public static function setApc($apc = true)
+  {
+    self::$apc = $apc;
   }
 
 }
