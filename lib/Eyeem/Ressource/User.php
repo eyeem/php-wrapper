@@ -25,7 +25,9 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     /* Auth User */
     'email',
     'emailNotifications',
-    'pushNotifications'
+    'pushNotifications',
+    /* Admin */
+    'admin'
   );
 
   public static $collections = array(
@@ -99,6 +101,12 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   {
     $album = $this->getEyeem()->getAlbum($album);
     return $this->getLikedAlbums()->setQueryParameters(array('limit' => 100))->hasMember($album);
+  }
+
+  public function isAdmin()
+  {
+    $admin = $this->getAttribute('admin');
+    return $admin == true;
   }
 
   // For Authenticated Users
