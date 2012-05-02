@@ -61,6 +61,13 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $this->getCollection('linkedApps')->setAuthenticated(true);
   }
 
+  public function authorizeApp($params)
+  {
+    $params = http_build_query($params);
+    $result = $this->request($this->getCollection('linkedApps')->getEndpoint(), 'POST', $params);
+    return $result;
+  }
+
   /* Social Media */
 
   public function getSocialMedia()
