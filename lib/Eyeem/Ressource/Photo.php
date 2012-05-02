@@ -20,6 +20,8 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     'user',
     'title',
     'caption',
+    'latitude',
+    'longitude',
     'totalLikes',
     'totalComments'
   );
