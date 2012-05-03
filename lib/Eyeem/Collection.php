@@ -17,6 +17,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public $authenticated = false;
 
+  public $useCache = true;
+
   public static $properties = array(
     'offset',
     'limit',
@@ -110,11 +112,14 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     }
     // From Cache?
     $params = $this->getQueryParameters();
+    $useCache = $this->getUseCache();
     $cacheKey = $this->getCacheKey($params);
-    if (!$value = Eyeem_Cache::get($cacheKey)) {
+    if (!$useCache || !$value = Eyeem_Cache::get($cacheKey)) {
       // Fresh!
       $value = $this->_fetchCollection();
-      Eyeem_Cache::set($cacheKey, $value);
+      if ($useCache && $cacheKey) {
+        Eyeem_Cache::set($cacheKey, $value);
+      }
     }
     return $this->_collection = $value;
   }
