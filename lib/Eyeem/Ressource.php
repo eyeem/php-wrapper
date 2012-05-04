@@ -270,12 +270,14 @@ class Eyeem_Ressource
   public function update($params = array())
   {
     $response = $this->request($this->getEndpoint(), 'PUT', $params);
+    $this->flushCache();
     return $response;
   }
 
   public function delete()
   {
     $response = $this->request($this->getEndpoint(), 'DELETE');
+    $this->flushCache();
     return true;
   }
 
