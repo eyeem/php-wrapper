@@ -140,4 +140,15 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     return $this->getPhotos()->post($params);
   }
 
+  /* Social Media */
+
+  public function getSocialMedia()
+  {
+    $user = $this->getRawArray();
+    if (isset($user['services'])) {
+      return array('services' => $user['services']);
+    }
+    return $this->request($this->getEndpoint() . '/socialMedia');
+  }
+
 }

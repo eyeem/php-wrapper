@@ -70,15 +70,6 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 
   /* Social Media */
 
-  public function getSocialMedia()
-  {
-    $user = $this->getRawArray();
-    if (isset($user['services'])) {
-      return array('services' => $user['services']);
-    }
-    return $this->request($this->getEndpoint() . '/socialMedia');
-  }
-
   public function socialMediaConnect($service, $params = array())
   {
     $params['connect'] = 1;
