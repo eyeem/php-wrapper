@@ -27,8 +27,10 @@ class Eyeem
   public static function loader($className)
   {
     if (strpos($className, 'Eyeem') === 0) {
-      $filename = str_replace('_', '/', $className);
-      require_once __DIR__ . '/' . $filename . '.php';
+      $filename = __DIR__ . '/' . str_replace('_', '/', $className) . '.php';
+      if (file_exists($filename)) {
+        require_once $filename;
+      }
     }
   }
 

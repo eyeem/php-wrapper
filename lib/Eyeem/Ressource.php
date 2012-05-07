@@ -229,7 +229,13 @@ class Eyeem_Ressource
   public function getCollection($name, $autoload = true)
   {
     if (empty($this->_collections[$name])) {
-      $collection = new Eyeem_RessourceCollection();
+      // Load class
+      $classname = 'Eyeem_Collection_' . ucfirst($name);
+      if (class_exists($classname)) {
+        $collection = new $classname();
+      } else {
+        $collection = new Eyeem_RessourceCollection();
+      }
       // Collection name (match the name in URL: friendsPhotos, comments, likers, etc ...)
       $collection->setName($name);
       // Which kind of objects we are handling (user, album, photo, etc)
