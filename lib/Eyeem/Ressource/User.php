@@ -76,13 +76,13 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function isFollowing($user)
   {
     $user = $this->getEyeem()->getUser($user);
-    return $this->getFriends()->setQueryParameters(array('limit' => 100))->hasMember($user);
+    return $this->getFriends()->hasMember($user);
   }
 
   public function isFollowedBy($user)
   {
     $user = $this->getEyeem()->getUser($user);
-    return $this->getFollowers()->setQueryParameters(array('limit' => 100))->hasMember($user);
+    return $this->getFollowers()->hasMember($user);
   }
 
   public function ownsPhoto($photo)
@@ -94,13 +94,13 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function likesPhoto($photo)
   {
     $photo = $this->getEyeem()->getPhoto($photo);
-    return $this->getLikedPhotos()->setQueryParameters(array('limit' => 100))->hasMember($photo);
+    return $this->getLikedPhotos()->hasMember($photo);
   }
 
   public function likesAlbum($album)
   {
     $album = $this->getEyeem()->getAlbum($album);
-    return $this->getLikedAlbums()->setQueryParameters(array('limit' => 100))->hasMember($album);
+    return $this->getLikedAlbums()->hasMember($album);
   }
 
   public function isAdmin()
@@ -114,16 +114,16 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function follow()
   {
     $me = $this->getEyeem()->getAuthUser();
-    $this->getFollowers()->setQueryParameters(array('limit' => 100))->add($me);
-    $me->getFriends()->setQueryParameters(array('limit' => 100))->flushMember($this, true);
+    $this->getFollowers()->add($me);
+    $me->getFriends()->flushMember($this, true);
     return $this;
   }
 
   public function unfollow()
   {
     $me = $this->getEyeem()->getAuthUser();
-    $this->getFollowers()->setQueryParameters(array('limit' => 100))->remove($me);
-    $me->getFriends()->setQueryParameters(array('limit' => 100))->flushMember($this, false);
+    $this->getFollowers()->remove($me);
+    $me->getFriends()->flushMember($this, false);
     return $this;
   }
 

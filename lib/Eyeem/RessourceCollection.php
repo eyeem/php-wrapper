@@ -13,11 +13,12 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
 
   public function getCacheKey($params = array())
   {
+    // No cache for offset results
+    if (isset($params['offset']) && $params['offset'] > 0) {
+      return false;
+    }
     $parent = $this->getParentRessource();
     $cacheKey = $parent::$name . '_' . $parent->getId() . '_' . $this->name;
-    if (!empty($params)) {
-      $cacheKey .= '_' . http_build_query($params);
-    }
     return $cacheKey;
   }
 

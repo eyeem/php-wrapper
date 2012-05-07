@@ -54,6 +54,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   protected $queryParameters = array(
     'detailed' => true,
+    'limit' => 30,
     'offset' => 0
   );
 
@@ -87,10 +88,11 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public function getCacheKey($params = array())
   {
-    $cacheKey = $this->name;
-    if (!empty($params)) {
-      $cacheKey .= '_' . http_build_query($params);
+    // No cache for offset results
+    if (isset($params['offset']) && $params['offset'] > 0) {
+      return false;
     }
+    $cacheKey = $this->name;
     return $cacheKey;
   }
 
@@ -114,7 +116,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $params = $this->getQueryParameters();
     $useCache = $this->getUseCache();
     $cacheKey = $this->getCacheKey($params);
-    if (!$useCache || !$value = Eyeem_Cache::get($cacheKey)) {
+    if (!$useCache || !$cacheKey || !$value = Eyeem_Cache::get($cacheKey)) {
       // Fresh!
       $value = $this->_fetchCollection();
       if ($useCache && $cacheKey) {
