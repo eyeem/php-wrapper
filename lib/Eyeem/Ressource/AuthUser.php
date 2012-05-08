@@ -25,12 +25,13 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 
   public function flushCache()
   {
-    $this->_ressource = null;
     // First flush User cache
     $this->id = $this->getId();
     Eyeem_Cache::delete( parent::getCacheKey() );
     // Then flush AuthUser cache
     Eyeem_Cache::delete( $this->getCacheKey() );
+    // Clean Local Ressource
+    $this->_ressource = null;
   }
 
   public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)

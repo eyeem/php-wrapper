@@ -196,13 +196,14 @@ class Eyeem_Ressource
 
   public function flushCache()
   {
-    $this->_ressource = null;
     $cacheKeyTs = $this->getCacheKey();
     Eyeem_Cache::delete($cacheKeyTs);
     $cacheKey = $this->getCacheKey(false);
     if ($cacheKey != $cacheKeyTs) {
       Eyeem_Cache::delete($cacheKey);
     }
+    // Clean Local Ressource
+    $this->_ressource = null;
   }
 
   public function flushCollection($name = null)
