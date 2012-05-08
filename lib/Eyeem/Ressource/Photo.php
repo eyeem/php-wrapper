@@ -104,6 +104,13 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     return $this;
   }
 
+  public function flag($offense = '')
+  {
+    $params = array('offense' => $offense);
+    $result = $this->request($this->getEndpoint() . '/flag', 'POST', $params);
+    return $this;
+  }
+
   public function postComment($params = array())
   {
     if (is_string($params)) {
