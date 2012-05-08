@@ -35,7 +35,7 @@ class Eyeem_RessourceIdCollection extends Eyeem_RessourceCollection
   {
     $params = array('onlyId' => true);
     $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params, $this->getAuthenticated());
-    if (empty($response[$this->idsRessourceName])) {
+    if (!isset($response[$this->idsRessourceName])) {
       throw new Exception("Missing ressource in response ($this->idsRessourceName).");
     }
     return $response[$this->idsRessourceName];
