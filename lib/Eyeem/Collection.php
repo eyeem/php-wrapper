@@ -134,6 +134,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
         $this->flushAttributes();
       }
     }
+
     if (isset($this->queryParameters['limit']) && $this->getLimit() !== null) {
       if ($this->queryParameters['limit'] > $this->getLimit()) {
         $this->flushAttributes();
@@ -147,6 +148,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
         $first = $this->items[0];
         if (empty($first[$cname])) {
           $this->flushAttributes();
+          // We better flush the cache and not only attributes
+          $this->flush();
         }
       }
     }
@@ -164,7 +167,9 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $this->_collection = null;
     $params = $this->getQueryParameters();
     $cacheKey = $this->getCacheKey($params);
-    Eyeem_Cache::delete($cacheKey);
+    if ($cacheKey) {
+      Eyeem_Cache::delete($cacheKey);
+    }
   }
 
   public function flushAttributes()
@@ -311,7 +316,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     // Flush methods
     if (substr($name, 0, 5) == 'flush') {
       $key = lcfirst(substr($name, 5));
-      // Default (write object property)
+      // Default (flush object property)
+      $this->$key = null;
       unset($this->$key);
       return $this;
     }
