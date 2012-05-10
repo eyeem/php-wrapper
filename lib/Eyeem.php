@@ -218,6 +218,7 @@ class Eyeem
     $params = array_merge($default_params, $params);
     $params['q'] = $query;
     $collection->setQueryParameters($params);
+    $collection->setUseCache(false);
 
     return $collection;
   }
@@ -231,6 +232,7 @@ class Eyeem
 
     $params['q'] = $query;
     $collection->setQueryParameters($params);
+    $collection->setUseCache(false);
 
     return $collection;
   }
