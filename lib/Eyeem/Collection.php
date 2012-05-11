@@ -136,7 +136,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     }
 
     if (isset($this->queryParameters['limit']) && $this->getLimit() !== null) {
-      if ($this->queryParameters['limit'] > $this->getLimit()) {
+      if ($this->queryParameters['limit'] > $this->getLimit() && $this->getTotal() > $this->getLimit()) {
         $this->flushAttributes();
       }
     }
