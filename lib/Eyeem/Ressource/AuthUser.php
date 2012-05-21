@@ -75,6 +75,15 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
   {
     $params['connect'] = 1;
     $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'POST', $params);
+    $this->flushCache();
+    return $result;
+  }
+
+  public function socialMediaKeys($service, $params = array())
+  {
+    $params['keys'] = 1;
+    $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'POST', $params);
+    $this->flushCache();
     return $result;
   }
 
