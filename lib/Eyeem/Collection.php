@@ -47,7 +47,9 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     // Search
     'q',
     'minPhotos',
-    'albumType'
+    'albumType',
+    // Suggested
+    'suggested'
   );
 
   protected $_collection = null;

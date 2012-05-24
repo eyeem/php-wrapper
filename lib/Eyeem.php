@@ -237,6 +237,35 @@ class Eyeem
     return $collection;
   }
 
+  // Suggested / Recommended
+
+  public function getSuggestedUsers($params = array())
+  {
+    $collection = new Eyeem_Collection();
+    $collection->setType('user');
+    $collection->setName('users');
+    $collection->setEyeem($this);
+
+    $params['suggested'] = true;
+
+    $collection->setQueryParameters($params);
+
+    return $collection;
+  }
+
+  public function getRecommendedAlbums($params = array())
+  {
+    $collection = new Eyeem_Collection();
+    $collection->setType('album');
+    $collection->setName('albums');
+    $collection->setEndpoint('/albums/recommended');
+    $collection->setEyeem($this);
+
+    $collection->setQueryParameters($params);
+
+    return $collection;
+  }
+
   public function __call($name, $arguments)
   {
     // Get methods
