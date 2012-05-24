@@ -171,7 +171,7 @@ class Eyeem
   public function getToken($code, $redirect_uri = null)
   {
     if (empty($redirect_uri)) {
-      $redirect_uri = Eyeem_Utils::getCurrentUrl();
+      $redirect_uri = Eyeem_Utils::getCurrentUrl(array('code'));
     }
     $params = array(
       'code' => $code,
