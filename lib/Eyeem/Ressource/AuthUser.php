@@ -110,4 +110,11 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $result;
   }
 
+  public function getSmContacts($service)
+  {
+    $params['matchContacts'] = 1;
+    $result = $this->request($this->getEndpoint() . '/smContacts/' . $service, 'GET', $params);
+    return $result['contacts'];
+  }
+
 }
