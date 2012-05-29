@@ -109,9 +109,9 @@ class Eyeem
     return $this;
   }
 
-  public function facebookLogin($username, $password)
+  public function facebookLogin($fbUserId, $fbAccessToken, $fbAccessTokenExpires = null)
   {
-    $response = $this->request('/auth/facebookLogin', 'POST', compact('username', 'password'));
+    $response = $this->request('/auth/facebookLogin', 'POST', compact('fbUserId', 'fbAccessToken', 'fbAccessTokenExpires'));
     $user = $response['user'];
     $accessToken = $response['access_token'];
     // Update Access Token
