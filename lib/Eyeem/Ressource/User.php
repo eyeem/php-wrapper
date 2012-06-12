@@ -27,7 +27,10 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'emailNotifications',
     'pushNotifications',
     /* Admin */
-    'admin'
+    'admin',
+    /* Settings */
+    'settings',
+    'newsSettings'
   );
 
   public static $collections = array(

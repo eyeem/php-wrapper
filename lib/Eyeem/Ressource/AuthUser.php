@@ -3,6 +3,14 @@
 class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 {
 
+  public static $parameters = array(
+    'includeSettings'
+  );
+
+  protected $_queryParameters = array(
+    'includeSettings' => true
+  );
+
   public function getEndpoint()
   {
     if (empty($this->id)) {
@@ -115,6 +123,29 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     $params['matchContacts'] = 1;
     $result = $this->request($this->getEndpoint() . '/smContacts/' . $service, 'GET', $params);
     return $result['contacts'];
+  }
+
+  /* Settings */
+
+  public function getSettings()
+  {
+    if (!$settings = $this->getAttribute('settings')) {
+      $this->flushCache();
+      $settings = $this->getAttribute('settings');
+    }
+    if (empty($settings)) {
+      $result = $this->request($this->getEndpoint() . '/settings');
+      $settings = $result['settings'];
+    }
+    return $settings;
+  }
+
+  public function setSettings($settings = array())
+  {
+    $params = array('settings' => $settings);
+    $params = http_build_query($params);
+    $result = $this->request($this->getEndpoint() . '/settings', 'POST', $params);
+    return $result['settings'];
   }
 
 }
