@@ -28,6 +28,7 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'pushNotifications',
     /* Admin */
     'admin',
+    'hidden',
     /* Settings */
     'settings',
     'newsSettings'
@@ -141,6 +142,22 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function postPhoto($params = array())
   {
     return $this->getPhotos()->post($params);
+  }
+
+  /* For Admin Users */
+
+  public function hide()
+  {
+    $result = $this->request($this->getEndpoint() . '/hide', 'POST', array('hide' => true));
+    $this->flushCache();
+    return $this;
+  }
+
+  public function unhide()
+  {
+    $result = $this->request($this->getEndpoint() . '/hide', 'POST', array('hide' => false));
+    $this->flushCache();
+    return $this;
   }
 
   /* Social Media */
