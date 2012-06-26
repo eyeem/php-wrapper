@@ -60,6 +60,16 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 
   /* Apps */
 
+  public function getApp($id)
+  {
+    $apps = $this->getCollection('apps')->setAuthenticated(true);
+    foreach ($apps as $app) {
+      if ($id == $app->getId()) {
+        return $app;
+      }
+    }
+  }
+
   public function getApps()
   {
     return $this->getCollection('apps')->setAuthenticated(true);
