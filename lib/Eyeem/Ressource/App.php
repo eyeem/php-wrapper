@@ -20,4 +20,11 @@ class Eyeem_Ressource_App extends Eyeem_Ressource
     'approved'
   );
 
+  public function update($params = array())
+  {
+    $response = $this->request($this->getEndpoint(), 'POST', $params);
+    $this->flushCache();
+    return $response;
+  }
+
 }
