@@ -130,6 +130,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     if (is_string($params)) {
       $params = array('message' => $params);
     }
+    $params = http_build_query($params);
     return $this->getComments()->post($params);
   }
 
