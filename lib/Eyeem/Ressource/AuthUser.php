@@ -158,4 +158,13 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $result['settings'];
   }
 
+  /* News Settings */
+
+  public function setNewsSettings($params = array())
+  {
+    $params = http_build_query($params);
+    $result = $this->request($this->getEndpoint() . '/newsSettings', 'POST', $params);
+    return $result['newsSettings'];
+  }
+
 }
