@@ -4,7 +4,7 @@ class Eyeem
 {
 
   public $baseUrl = 'https://www.eyeem.com/api/v2';
-
+  //public $baseUrl = 'https://apitest.eyeem.com/api/v2';
   public $authorizeUrl = 'https://www.eyeem.com/oauth/authorize';
 
   public $clientId = null;
@@ -146,10 +146,10 @@ class Eyeem
     return $this;
   }
 
-  public function signUp($email, $password)
+  public function signUp($email, $password, $nickname)
   {
-    $this->request('/auth/signUp', 'POST', compact('email', 'password'));
-    return $this->login($email, $password);
+    $this->request('/auth/signUp', 'POST', compact('email', 'password', 'nickname'));
+    return $this->login($email, $password, $nickname);
   }
 
   // oAuth
