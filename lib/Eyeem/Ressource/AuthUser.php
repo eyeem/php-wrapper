@@ -167,4 +167,15 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $result['newsSettings'];
   }
 
+  /* Delete */
+
+  public function delete()
+  {
+    $params = array('user_id' => 'me');
+    $params = http_build_query($params);
+    $result = $this->request('/auth/deleteUser', 'DELETE', $params, true);
+    return true;
+    
+  }
+
 }
