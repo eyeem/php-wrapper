@@ -18,7 +18,9 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     'type',
     'totalPhotos',
     'totalLikers',
-    'totalContributors'
+    'totalContributors',
+    'latitude',
+    'longitude'
   );
 
   public static $collections = array(
