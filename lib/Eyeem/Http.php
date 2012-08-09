@@ -44,7 +44,7 @@ class Eyeem_Http
         }
       } else {
         // Fix 411 HTTP errors
-        if ($method == 'PUT') {
+        if ($method == 'PUT' || $method == 'POST') {
           $headers[] = "Content-Length:0";
         }
       }
