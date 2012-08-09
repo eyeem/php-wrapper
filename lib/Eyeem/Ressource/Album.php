@@ -106,5 +106,19 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     $photo->getAlbums()->flushMember($this, false);
     return $this;
   }
+  
+  public function discover($params = array())
+  {
+    $params = array();
+    $result = $this->request($this->getEndpoint() . '/discover', 'POST', $params);
+    return $result;
+  }
+  
+  public function view($params = array())
+  {
+    $params = array();
+    $result = $this->request($this->getEndpoint() . '/view', 'POST', $params);
+    return $result;
+  }
 
 }
