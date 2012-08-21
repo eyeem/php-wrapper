@@ -19,8 +19,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     'totalPhotos',
     'totalLikers',
     'totalContributors',
-    'latitude',
-    'longitude'
+    'location',
   );
 
   public static $collections = array(
@@ -63,6 +62,17 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     return $this->getLikers()->hasMember($user);
   }
 
+  // Location
+  
+  public function getLatitude(){
+    $loc = $this->getLocation();
+    return $loc['latitude'];
+  }
+  public function getLongitude(){
+    $loc = $this->getLocation();
+    return $loc['longitude'];
+  }
+  
   // For Authenticated Users
 
   public function like()
