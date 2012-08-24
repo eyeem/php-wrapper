@@ -146,7 +146,7 @@ class Eyeem
     return $this;
   }
 
-  public function signUp($email, $password, $nickname)
+  public function signUp($email, $password, $nickname = null)
   {
     $this->request('/auth/signUp', 'POST', compact('email', 'password', 'nickname'));
     return $this->login($email, $password, $nickname);

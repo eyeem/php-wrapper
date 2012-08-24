@@ -19,7 +19,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     'totalPhotos',
     'totalLikers',
     'totalContributors',
-    'location',
+    'location'
   );
 
   public static $collections = array(
@@ -63,16 +63,19 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   }
 
   // Location
-  
-  public function getLatitude(){
-    $loc = $this->getLocation();
-    return $loc['latitude'];
+
+  public function getLatitude()
+  {
+    $location = $this->getLocation();
+    return $location['latitude'];
   }
-  public function getLongitude(){
-    $loc = $this->getLocation();
-    return $loc['longitude'];
+
+  public function getLongitude()
+  {
+    $location = $this->getLocation();
+    return $location['longitude'];
   }
-  
+
   // For Authenticated Users
 
   public function like()
@@ -116,14 +119,14 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     $photo->getAlbums()->flushMember($this, false);
     return $this;
   }
-  
+
   public function discover($params = array())
   {
     $params = array();
     $result = $this->request($this->getEndpoint() . '/discover', 'POST', $params);
     return $result;
   }
-  
+
   public function view($params = array())
   {
     $params = array();

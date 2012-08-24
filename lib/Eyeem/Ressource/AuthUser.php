@@ -176,7 +176,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     $result = $this->request('/auth/deleteUser', 'DELETE', $params, true);
     $this->flushCache();
     return true;
-    
+
   }
 
 }
