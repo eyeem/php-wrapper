@@ -203,6 +203,16 @@ class Eyeem
     $response = $this->request('/photos', 'POST', $params);
     return $this->getRessourceObject('photo', $response['photo']);
   }
+  
+  // Check Nickname & Email
+  
+  public function checkNickname($params){
+    return $response = $this->request('/auth/checkNickname', 'GET', array('nickname'=>$params));
+  }
+  
+  public function checkEmail($params){
+    return $response = $this->request('/auth/checkEmail', 'POST', array('email'=>$params));
+  }
 
   // Search
 
