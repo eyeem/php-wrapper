@@ -120,7 +120,7 @@ class Eyeem
     $cacheKey = 'user' . '_' . $accessToken;
     Eyeem_Cache::set($cacheKey, $user);
     // Return Eyeem for chainability
-    return $this;
+    return $response;
   }
 
   public function confirmEmail($token)
