@@ -44,7 +44,7 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'feed' => 'album',
     'apps' => 'app',
     'linkedApps' => 'app',
-    'discover' => 'album'
+    'discoverAlbums' => 'album'
   );
 
   public function getId()

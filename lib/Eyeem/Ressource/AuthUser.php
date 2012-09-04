@@ -181,9 +181,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
   
   /* Discover */
   
-  public function discoverAlbums(){
-    $params = array('user'=>'me');
-    $result = $this->request('/discover/albums', 'GET', $params);
-    return $result['discoverAlbums'];
+  public function getDiscoverAlbums(){
+    return $this->getCollection('discoverAlbums')->setAuthenticated(true);
   } 
 }
