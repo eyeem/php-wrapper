@@ -20,7 +20,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     }
   }
 
-  public function getCacheKey($ts = true, $params = array())
+  public function getCacheKey($params = array())
   {
     if ($accessToken = $this->getEyeem()->getAccessToken()) {
       $cacheKey = 'user' . '_' . $accessToken;
@@ -33,13 +33,11 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 
   public function flushCache()
   {
-    // First flush User cache
-    $this->id = $this->getId();
-    Eyeem_Cache::delete( parent::getCacheKey() );
-    // Then flush AuthUser cache
-    Eyeem_Cache::delete( $this->getCacheKey() );
-    // Clean Local Ressource
-    $this->_ressource = null;
+    // First flush AuthUser cache
+    $cache = $this->getEyeem()->getCache();
+    $cache->delete( $this->getCacheKey() );
+    // Then flush parent cache
+    parent::flushCache();
   }
 
   public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
@@ -49,12 +47,12 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 
   public function update($params = array())
   {
+    $cache = $this->getEyeem()->getCache();
     $response = $this->request($this->getEndpoint(), 'POST', $params);
     $this->setAttributes($response['user']);
-    $this->updateCache($response['user']);
     // Flush Public User cache
     // we can't just update it because it may contains private informations at this point
-    Eyeem_Cache::delete( parent::getCacheKey() );
+    parent::flushCache();
     return $this;
   }
 

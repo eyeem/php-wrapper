@@ -40,6 +40,19 @@ class Eyeem
     return $url;
   }
 
+  public function getCache()
+  {
+    if (empty($this->cache)) {
+      $this->cache = new Eyeem_Cache();
+    }
+    return $this->cache;
+  }
+
+  public function setCache($cache)
+  {
+    $this->cache = $cache;
+  }
+
   public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
   {
     $request = array(
@@ -104,7 +117,7 @@ class Eyeem
     $this->setAccessToken($accessToken);
     // Update User Cache
     $cacheKey = 'user' . '_' . $accessToken;
-    Eyeem_Cache::set($cacheKey, $user);
+    $this->getCache()->set($cacheKey, $user);
     // Return Eyeem for chainability
     return $this;
   }
@@ -118,7 +131,7 @@ class Eyeem
     $this->setAccessToken($accessToken);
     // Update User Cache
     $cacheKey = 'user' . '_' . $accessToken;
-    Eyeem_Cache::set($cacheKey, $user);
+    $this->getCache()->set($cacheKey, $user);
     // Return Eyeem for chainability
     return $response;
   }

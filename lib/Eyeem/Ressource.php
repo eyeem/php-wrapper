@@ -113,13 +113,12 @@ class Eyeem_Ressource
     return $this->getAttributes(true);
   }
 
-  public function getCacheKey($ts = true)
+  public function getCacheKey()
   {
     if (empty($this->id)) {
       throw new Exception("Unknown id.");
     }
-    $updated = $this->getUpdated('U');
-    $cacheKey = static::$name . '_' . $this->id . ($ts && $updated ? '_' . $updated : '');
+    $cacheKey = static::$name . '_' . $this->id;
     return $cacheKey;
   }
 
@@ -171,13 +170,14 @@ class Eyeem_Ressource
       return $this->_ressource;
     }
     // From Cache?
-    $cacheKey = $this->getCacheKey(true);
-    if (!$cacheKey || !$value = Eyeem_Cache::get($cacheKey)) {
+    $cache = $this->getEyeem()->getCache();
+    $cacheKey = $this->getCacheKey();
+    if (!$cacheKey || !$value = $cache->get($cacheKey)) {
       // Fresh!
       $value = $this->fetch();
       // Store ressource
       if ($cacheKey) {
-        Eyeem_Cache::set($cacheKey, $value, $this->getUpdated() ? 0 : null);
+        $cache->set($cacheKey, $value);
       }
     }
     return $this->_ressource = $value;
@@ -185,23 +185,17 @@ class Eyeem_Ressource
 
   public function updateCache($value)
   {
+    $cache = $this->getEyeem()->getCache();
     $this->_ressource = $value;
-    $cacheKeyTs = $this->getCacheKey();
-    Eyeem_Cache::set($cacheKeyTs, $value);
-    $cacheKey = $this->getCacheKey(false);
-    if ($cacheKey != $cacheKeyTs) {
-      Eyeem_Cache::set($cacheKey, $value);
-    }
+    $cacheKey = $this->getCacheKey();
+    $cache->set($cacheKey, $value);
   }
 
   public function flushCache()
   {
-    $cacheKeyTs = $this->getCacheKey();
-    Eyeem_Cache::delete($cacheKeyTs);
-    $cacheKey = $this->getCacheKey(false);
-    if ($cacheKey != $cacheKeyTs) {
-      Eyeem_Cache::delete($cacheKey);
-    }
+    $cache = $this->getEyeem()->getCache();
+    $cacheKey = $this->getCacheKey();
+    $cache->delete($cacheKey);
     // Clean Local Ressource
     $this->_ressource = null;
   }

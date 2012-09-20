@@ -20,12 +20,13 @@ class Eyeem_RessourceIdCollection extends Eyeem_RessourceCollection
     }
     // From Cache?
     $parent = $this->getParentRessource();
+    $cache = $this->getEyeem()->getCache();
     $cacheKey = $parent::$name . '_' . $parent->getId() . '_' . $this->name . '_ids';
-    if (!$ids = Eyeem_Cache::get($cacheKey)) {
+    if (!$ids = $cache->get($cacheKey)) {
       // Fresh!
       $ids = $this->_fetchIds();
       if ($cacheKey) {
-        Eyeem_Cache::set($cacheKey, $ids);
+        $cache->set($cacheKey, $ids);
       }
     }
     return $this->_ids = $ids;
@@ -54,8 +55,9 @@ class Eyeem_RessourceIdCollection extends Eyeem_RessourceCollection
     $this->_ids = null;
     // Clear Cache
     $parent = $this->getParentRessource();
+    $cache = $this->getEyeem()->getCache();
     $cacheKey = $parent::$name . '_' . $parent->getId() . '_' . $this->name . '_ids';
-    Eyeem_Cache::delete($cacheKey);
+    $cache->delete($cacheKey);
   }
 
 }
