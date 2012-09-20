@@ -161,13 +161,13 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     }
     return parent::delete();
   }
-  
+
   public function discover($params = array())
   {
     $params = array();
     $result = $this->request($this->getEndpoint() . '/discover', 'POST', $params);
     return $result;
   }
-  
+
 
 }

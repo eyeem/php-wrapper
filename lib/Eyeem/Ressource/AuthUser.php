@@ -174,12 +174,14 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     $result = $this->request('/auth/deleteUser', 'DELETE', $params, true);
     $this->flushCache();
     return true;
-    
+
   }
-  
+
   /* Discover */
-  
-  public function getDiscoverAlbums(){
+
+  public function getDiscoverAlbums()
+  {
     return $this->getCollection('discoverAlbums')->setAuthenticated(true);
-  } 
+  }
+
 }

@@ -4,7 +4,7 @@ class Eyeem
 {
 
   public $baseUrl = 'https://www.eyeem.com/api/v2';
-  //public $baseUrl = 'https://apitest.eyeem.com/api/v2';
+
   public $authorizeUrl = 'https://www.eyeem.com/oauth/authorize';
 
   public $clientId = null;
@@ -216,15 +216,17 @@ class Eyeem
     $response = $this->request('/photos', 'POST', $params);
     return $this->getRessourceObject('photo', $response['photo']);
   }
-  
+
   // Check Nickname & Email
-  
-  public function checkNickname($params){
-    return $response = $this->request('/auth/checkNickname', 'GET', array('nickname'=>$params));
+
+  public function checkNickname($nickname)
+  {
+    return $response = $this->request('/auth/checkNickname', 'GET', array('nickname' => $nickname));
   }
-  
-  public function checkEmail($params){
-    return $response = $this->request('/auth/checkEmail', 'POST', array('email'=>$params));
+
+  public function checkEmail($email)
+  {
+    return $response = $this->request('/auth/checkEmail', 'POST', array('email' => $email));
   }
 
   // Search
