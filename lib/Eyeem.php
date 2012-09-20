@@ -214,6 +214,12 @@ class Eyeem
     return $response = $this->request('/auth/checkEmail', 'POST', array('email'=>$params));
   }
 
+  // Get Author from fb_action
+  public function getFbAuthor($action_id){
+    $result = $this->request("/users", 'GET', array('action_id' => $action_id));
+    return($this->getRessourceObject('user',$result['user']['id']));
+  }
+
   // Search
 
   public function searchAlbums($query = '', $params = array())
@@ -297,5 +303,4 @@ class Eyeem
     }
     throw new Exception("Unknown method ($name).");
   }
-
 }
