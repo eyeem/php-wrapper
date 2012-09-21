@@ -34,17 +34,21 @@ class Eyeem_Http
       }
       // Parameters
       if (!empty($params)) {
-        if ($method == 'GET') {
-          $url .= (strpos($url, '?') === false ? '?': '&') . http_build_query($params, null, '&');
-        } else {
-          if ($method == 'PUT') {
+        switch ($method) {
+          case 'GET':
+            $url .= (strpos($url, '?') === false ? '?': '&') . http_build_query($params, null, '&');
+            break;
+          case 'PUT':
+          case 'DELETE':
             $params = http_build_query($params, null, '&');
-          }
-          curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+          case 'POST':
+          default:
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            break;
         }
       } else {
         // Fix 411 HTTP errors
-        if ($method == 'PUT' || $method == 'POST') {
+        if ($method != 'GET') {
           $headers[] = "Content-Length:0";
         }
       }

@@ -43,7 +43,8 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'friendsPhotos' => 'photo',
     'feed' => 'album',
     'apps' => 'app',
-    'linkedApps' => 'app'
+    'linkedApps' => 'app',
+    'discoverAlbums' => 'album'
   );
 
   public function getId()
@@ -55,18 +56,29 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     return $this->id = $this->getAttribute('id');
   }
 
-  public function getCacheKey($ts = true, $params = array())
+  public function getCacheKey($params = array())
   {
     if (empty($this->id)) {
       throw new Exception("Unknown id.");
     }
     $id = $this->id == 'me' ? $this->getEyeem()->getAccessToken() : $this->id;
-    $updated = $this->getUpdated('U');
-    $cacheKey =  static::$name . '_' . $id . ($updated ? '_' . $updated : '');
+    $cacheKey =  static::$name . '_' . $id;
     if (!empty($params)) {
       $cacheKey .= '_' . http_build_query($params);
     }
     return $cacheKey;
+  }
+
+  public function flushCache()
+  {
+    $cache = $this->getEyeem()->getCache();
+    if ($id = $this->getId()) {
+      $cache->delete("user_$id");
+    }
+    if ($nickname = $this->getNickname()) {
+      $cache->delete("user_$nickname");
+    }
+    parent::flushCache();
   }
 
   public function getFriendsPhotos($params = array())

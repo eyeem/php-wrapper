@@ -4,7 +4,7 @@ class Eyeem
 {
 
   public $baseUrl = 'https://www.eyeem.com/api/v2';
-  //public $baseUrl = 'https://apitest.eyeem.com/api/v2';
+
   public $authorizeUrl = 'https://www.eyeem.com/oauth/authorize';
 
   public $clientId = null;
@@ -38,6 +38,19 @@ class Eyeem
   {
     $url = $this->baseUrl . $endpoint;
     return $url;
+  }
+
+  public function getCache()
+  {
+    if (empty($this->cache)) {
+      $this->cache = new Eyeem_Cache();
+    }
+    return $this->cache;
+  }
+
+  public function setCache($cache)
+  {
+    $this->cache = $cache;
   }
 
   public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
@@ -104,7 +117,7 @@ class Eyeem
     $this->setAccessToken($accessToken);
     // Update User Cache
     $cacheKey = 'user' . '_' . $accessToken;
-    Eyeem_Cache::set($cacheKey, $user);
+    $this->getCache()->set($cacheKey, $user);
     // Return Eyeem for chainability
     return $this;
   }
@@ -118,9 +131,9 @@ class Eyeem
     $this->setAccessToken($accessToken);
     // Update User Cache
     $cacheKey = 'user' . '_' . $accessToken;
-    Eyeem_Cache::set($cacheKey, $user);
+    $this->getCache()->set($cacheKey, $user);
     // Return Eyeem for chainability
-    return $this;
+    return $response;
   }
 
   public function confirmEmail($token)
@@ -202,6 +215,18 @@ class Eyeem
   {
     $response = $this->request('/photos', 'POST', $params);
     return $this->getRessourceObject('photo', $response['photo']);
+  }
+
+  // Check Nickname & Email
+
+  public function checkNickname($nickname)
+  {
+    return $response = $this->request('/auth/checkNickname', 'GET', array('nickname' => $nickname));
+  }
+
+  public function checkEmail($email)
+  {
+    return $response = $this->request('/auth/checkEmail', 'POST', array('email' => $email));
   }
 
   // Search

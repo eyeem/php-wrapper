@@ -116,13 +116,14 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     }
     // From Cache?
     $params = $this->getQueryParameters();
+    $cache = $this->getEyeem()->getCache();
     $useCache = $this->getUseCache();
     $cacheKey = $this->getCacheKey($params);
-    if (!$useCache || !$cacheKey || !$value = Eyeem_Cache::get($cacheKey)) {
+    if (!$useCache || !$cacheKey || !$value = $cache->get($cacheKey)) {
       // Fresh!
       $value = $this->_fetchCollection();
       if ($useCache && $cacheKey) {
-        Eyeem_Cache::set($cacheKey, $value);
+        $cache->set($cacheKey, $value);
       }
     }
     return $this->_collection = $value;
@@ -168,9 +169,10 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   {
     $this->_collection = null;
     $params = $this->getQueryParameters();
+    $cache = $this->getEyeem()->getCache();
     $cacheKey = $this->getCacheKey($params);
     if ($cacheKey) {
-      Eyeem_Cache::delete($cacheKey);
+      $cache->delete($cacheKey);
     }
   }
 
@@ -200,9 +202,10 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $member = $this->getRessourceObject($member);
 
     // From Cache
+    $cache = $this->getEyeem()->getCache();
     $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
-    if ($cacheKey) {
-      $value = Eyeem_Cache::get($cacheKey);
+    if ($cache && $cacheKey) {
+      $value = $cache->get($cacheKey);
       if ($value !== null && $value != '') {
         return $value === 1 ? true : false;
       }
@@ -233,8 +236,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     }
 
     // Set Cache
-    if ($cacheKey) {
-      Eyeem_Cache::set($cacheKey, ($value === true ? 1 : 0));
+    if ($cache && $cacheKey) {
+      $cache->set($cacheKey, ($value === true ? 1 : 0));
     }
 
     return $value;
@@ -243,12 +246,13 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   public function flushMember($member, $value = null)
   {
     $this->flush();
+    $cache = $this->getEyeem()->getCache();
     $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
-    if ($cacheKey) {
+    if ($cache && $cacheKey) {
       if ($value === null) {
-        Eyeem_Cache::delete($cacheKey);
+        $cache->delete($cacheKey);
       } else {
-        Eyeem_Cache::set($cacheKey, ($value === true ? 1 : 0));
+        $cache->set($cacheKey, ($value === true ? 1 : 0));
       }
     }
   }

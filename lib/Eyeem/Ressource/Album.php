@@ -19,7 +19,8 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     'totalPhotos',
     'totalLikers',
     'totalContributors',
-    'location'
+    'location',
+    'hidden'
   );
 
   public static $collections = array(
@@ -120,6 +121,8 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     return $this;
   }
 
+  // Open Graph
+
   public function discover($params = array())
   {
     $params = array();
@@ -131,6 +134,21 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   {
     $params = array();
     $result = $this->request($this->getEndpoint() . '/view', 'POST', $params);
+    return $result;
+  }
+
+  // Hide / Unhide an album
+
+  public function hide($params = array())
+  {
+    $params = array('hide'=>true);
+    $result = $this->request($this->getEndpoint() . '/hide', 'POST', $params);
+    return $result;
+  }
+  public function unhide($params = array())
+  {
+    $params = array('hide'=>false);
+    $result = $this->request($this->getEndpoint() . '/hide', 'POST', $params);
     return $result;
   }
 
