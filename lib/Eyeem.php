@@ -70,6 +70,17 @@ class Eyeem
     return $array;
   }
 
+  public function cachedGetRequest($endpoint, $params = array())
+  {
+    $cache = $this->getCache();
+    $cacheKey = md5($endpoint . http_build_query($params));
+    if (!$result = $cache->get($cacheKey)) {
+      $result = $this->request($endpoint, 'GET', $params);
+      $cache->set($cacheKey, $result);
+    }
+    return $result;
+  }
+
   public function authenticatedRequest($endpoint, $method = 'GET', $params = array(), $authenticated = true)
   {
     return $this->request($endpoint, $method, $params, $authenticated);
