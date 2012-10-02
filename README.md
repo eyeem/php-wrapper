@@ -13,7 +13,7 @@ $eyeem->setClientSecret('CLIENT_SECRET');
 $eyeem->autoload();
 ```
 
-Ressources
+Resources
 ==========
 
 Photo
