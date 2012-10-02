@@ -121,7 +121,7 @@ $photo = $eyeem->postPhoto(array('filename' => $filename, 'caption' => 'A nice p
 License
 =======
 
-    Copyright 2011, 2012 Chris Banes
+    Copyright 2012 EyeEm Mobile GmbH
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
