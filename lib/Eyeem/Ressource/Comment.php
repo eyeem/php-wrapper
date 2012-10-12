@@ -13,9 +13,12 @@ class Eyeem_Ressource_Comment extends Eyeem_Ressource
     'message',
     'user',
     'updated',
+    'extendedMessage',
+    'mentionedUsers'
   );
 
-  public static $collections = array();
+  public static $collections = array(
+  );
 
   public function getUser()
   {
