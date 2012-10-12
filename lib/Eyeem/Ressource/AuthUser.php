@@ -162,6 +162,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
   {
     $params = http_build_query($params);
     $result = $this->request($this->getEndpoint() . '/newsSettings', 'POST', $params);
+    $this->flushCache();
     return $result['newsSettings'];
   }
 
