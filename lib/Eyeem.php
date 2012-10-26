@@ -232,18 +232,21 @@ class Eyeem
 
   public function checkNickname($nickname)
   {
-    return $response = $this->request('/auth/checkNickname', 'GET', array('nickname' => $nickname));
+    return $this->request('/auth/checkNickname', 'GET', array('nickname' => $nickname));
   }
 
   public function checkEmail($email)
   {
-    return $response = $this->request('/auth/checkEmail', 'POST', array('email' => $email));
+    return $this->request('/auth/checkEmail', 'POST', array('email' => $email));
   }
 
   // Get Author from fb_action
-  public function getFbAuthor($action_id){
-    $result = $this->request("/users", 'GET', array('action_id' => $action_id));
-    return($this->getRessourceObject('user',$result['user']['id']));
+
+  public function getFbAuthor($action_id)
+  {
+    $params = array('action_id' => $action_id);
+    $response = $this->request('/users', 'GET', $params);
+    return $this->getRessourceObject('user', $response['user']);
   }
 
   // Search
