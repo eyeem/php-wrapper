@@ -56,6 +56,17 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     return $this->id = $this->getAttribute('id');
   }
 
+  // Helper to get a Thumb Url
+
+  public function getThumbUrl()
+  {
+    $thumbUrl = $this->thumbUrl;
+    if (Eyeem_Utils::getCurrentScheme() == 'https') {
+      $thumbUrl = str_replace('http://', 'https://', $thumbUrl);
+    }
+    return $thumbUrl;
+  }
+
   public function getCacheKey($params = array())
   {
     if (empty($this->id)) {
