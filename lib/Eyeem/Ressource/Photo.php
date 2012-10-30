@@ -68,6 +68,9 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     if ($width != 'h') {
       $thumbUrl = str_replace('/thumb/h/', "/thumb/$width/", $thumbUrl);
     }
+    if (Eyeem_Utils::getCurrentScheme() == 'https') {
+      $thumbUrl = str_replace('http://', "https://", $thumbUrl);
+    }
     return $thumbUrl;
   }
 
@@ -168,6 +171,5 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     $result = $this->request($this->getEndpoint() . '/discover', 'POST', $params);
     return $result;
   }
-
 
 }

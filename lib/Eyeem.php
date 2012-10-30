@@ -30,6 +30,7 @@ class Eyeem
       $filename = __DIR__ . '/' . str_replace('_', '/', $className) . '.php';
       if (file_exists($filename)) {
         require_once $filename;
+        return true;
       }
     }
   }
@@ -332,4 +333,5 @@ class Eyeem
     }
     throw new Exception("Unknown method ($name).");
   }
+
 }

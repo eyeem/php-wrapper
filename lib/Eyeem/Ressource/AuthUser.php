@@ -182,11 +182,11 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
   {
     return $this->getCollection('discoverAlbums')->setAuthenticated(true);
   }
-  
+
   /* Search Friends */
+
   public function searchFriends($query = '', $params = array())
   {
-
     $params['q'] = $query;
     $result = $this->request('/users', 'GET', $params, true);
     $this->flushCache();

@@ -54,6 +54,9 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     if ($width != 'sq') {
       $thumbUrl = str_replace('/thumb/sq/', "/thumb/$width/", $thumbUrl);
     }
+    if (Eyeem_Utils::getCurrentScheme() == 'https') {
+      $thumbUrl = str_replace('http://', "https://", $thumbUrl);
+    }
     return $thumbUrl;
   }
 
@@ -145,6 +148,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     $result = $this->request($this->getEndpoint() . '/hide', 'POST', $params);
     return $result;
   }
+
   public function unhide($params = array())
   {
     $params = array('hide'=>false);
