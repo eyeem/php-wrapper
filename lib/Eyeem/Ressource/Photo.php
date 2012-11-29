@@ -24,6 +24,8 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     'longitude',
     'totalLikes',
     'totalComments',
+    'frame',
+    'filter',    
     /* Admin */
     'hidden'
   );
