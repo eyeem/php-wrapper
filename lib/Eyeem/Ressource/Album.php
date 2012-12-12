@@ -156,4 +156,13 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     return $result;
   }
 
+  /* Confirm Invite */
+
+  public function confirmInvite($params = array())
+  {
+    $result = $this->request($this->getEndpoint().'/acceptInvite', 'POST', $params, true);
+    $this->flushCache();
+    return $result['users'];
+  }
+
 }
