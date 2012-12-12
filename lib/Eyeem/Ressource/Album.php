@@ -162,7 +162,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   {
     $result = $this->request($this->getEndpoint().'/acceptInvite', 'POST', $params, true);
     $this->flushCache();
-    return $result['users'];
+    return $result;
   }
 
 }
