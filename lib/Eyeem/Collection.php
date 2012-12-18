@@ -259,7 +259,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public function getLatest()
   {
-    return $this->get(0);
+    foreach ($this->getItems() as $item) if ($item) return $item;
   }
 
   public function add($member)
