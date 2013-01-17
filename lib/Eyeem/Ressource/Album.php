@@ -49,10 +49,10 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   {
     $thumbUrl = $this->thumbUrl;
     if ($height != '200') {
-      $thumbUrl = str_replace('/thumb/sq/200/', "/thumb/sq/$height/", $thumbUrl);
+      $thumbUrl = str_replace('www.eyeem.com/thumb/sq/200/', "cdn.yemimg.com/thumb/sq/$height/", $thumbUrl);
     }
     if ($width != 'sq') {
-      $thumbUrl = str_replace('/thumb/sq/', "/thumb/$width/", $thumbUrl);
+      $thumbUrl = str_replace('www.eyeem.com/thumb/sq/', "cdn.yemimg.com/thumb/$width/", $thumbUrl);
     }
     if (Eyeem_Utils::getCurrentScheme() == 'https') {
       $thumbUrl = str_replace('http://', 'https://', $thumbUrl);

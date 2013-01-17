@@ -61,6 +61,7 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function getThumbUrl()
   {
     $thumbUrl = $this->thumbUrl;
+    $thumbUrl = str_replace('www.eyeem.com/thumb', "cdn.yemimg.com/thumb", $thumbUrl);
     if (Eyeem_Utils::getCurrentScheme() == 'https') {
       $thumbUrl = str_replace('http://', 'https://', $thumbUrl);
     }
