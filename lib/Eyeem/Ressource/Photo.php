@@ -70,9 +70,11 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     if ($width != 'h') {
       $thumbUrl = str_replace('www.eyeem.com/thumb/h/', "cdn.yemimg.com/thumb/$width/", $thumbUrl);
     }
+    /*
     if (Eyeem_Utils::getCurrentScheme() == 'https') {
       $thumbUrl = str_replace('http://', 'https://', $thumbUrl);
     }
+    */
     return $thumbUrl;
   }
 

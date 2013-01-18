@@ -54,9 +54,11 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     if ($width != 'sq') {
       $thumbUrl = str_replace('www.eyeem.com/thumb/sq/', "cdn.yemimg.com/thumb/$width/", $thumbUrl);
     }
+    /*
     if (Eyeem_Utils::getCurrentScheme() == 'https') {
       $thumbUrl = str_replace('http://', 'https://', $thumbUrl);
     }
+    */
     return $thumbUrl;
   }
 
