@@ -31,7 +31,11 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'hidden',
     /* Settings */
     'settings',
-    'newsSettings'
+    'newsSettings',
+    'follower',
+    'following',
+    'restricted',
+    'blocked'
   );
 
   public static $collections = array(
@@ -157,9 +161,23 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     return $this;
   }
 
+  public function block()
+  {
+    $me = $this->getEyeem()->getAuthUser();
+    $result = $this->request($me->getEndpoint() . '/blocked/'. $this->getId(), 'PUT', array());    
+    return $this;
+  }
+ 
+ 
+  public function unblock()
+  {
+    $me = $this->getEyeem()->getAuthUser();
+    $result = $this->request($me->getEndpoint() . '/blocked/'. $this->getId(), 'DELETE', array()); 
+    return $this;
+  }
+   
   public function update($params = array())
   {
-    $response = $this->request($this->getEndpoint(), 'POST', $params);
     $this->setAttributes($response['user']);
     $this->updateCache($response['user']);
     return $this;
