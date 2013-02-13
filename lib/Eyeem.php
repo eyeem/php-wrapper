@@ -283,18 +283,19 @@ class Eyeem
     return $collection;
   }
 
-  // Suggested / Recommended
+  // Suggested / Recommended / Popular
 
   public function getSuggestedUsers($params = array())
   {
-    $collection = new Eyeem_Collection();
-    $collection->setType('user');
-    $collection->setName('users');
-    $collection->setEyeem($this);
-
     $params['suggested'] = true;
 
-    $collection->setQueryParameters($params);
+    $collection = new Eyeem_Collection();
+    $collection
+      ->setType('user')
+      ->setName('users')
+      ->setEndpoint('/users')
+      ->setEyeem($this)
+      ->setQueryParameters($params);
 
     return $collection;
   }
@@ -302,12 +303,25 @@ class Eyeem
   public function getRecommendedAlbums($params = array())
   {
     $collection = new Eyeem_Collection();
-    $collection->setType('album');
-    $collection->setName('albums');
-    $collection->setEndpoint('/albums/recommended');
-    $collection->setEyeem($this);
+    $collection
+      ->setType('album')
+      ->setName('albums')
+      ->setEndpoint('/albums/recommended')
+      ->setEyeem($this)
+      ->setQueryParameters($params);
 
-    $collection->setQueryParameters($params);
+    return $collection;
+  }
+
+  public function getPopularPhotos($params = array())
+  {
+    $collection = new Eyeem_Collection();
+    $collection
+      ->setType('photo')
+      ->setName('photos')
+      ->setEndpoint('/photos/popular')
+      ->setEyeem($this)
+      ->setQueryParameters($params);
 
     return $collection;
   }
