@@ -133,7 +133,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $result['contacts'];
   }
 
-  /* Settings */
+  /* Settings (deprecated) */
 
   public function getSettings()
   {
@@ -156,7 +156,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $result['settings'];
   }
 
-  /* News Settings */
+  /* News Settings (deprecated, replaced by flags) */
 
   public function setNewsSettings($params = array())
   {
@@ -164,6 +164,22 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     $result = $this->request($this->getEndpoint() . '/newsSettings', 'POST', $params);
     $this->flushCache();
     return $result['newsSettings'];
+  }
+
+  /* Flags */
+
+  public function getFlags()
+  {
+    $result = $this->request($this->getEndpoint() . '/flags');
+    return $result['flags'];
+  }
+
+  public function setFlags($params = array())
+  {
+    $params = http_build_query($params);
+    $result = $this->request($this->getEndpoint() . '/flags', 'POST', $params);
+    $this->flushCache();
+    return $result['flags'];
   }
 
   /* Delete */
