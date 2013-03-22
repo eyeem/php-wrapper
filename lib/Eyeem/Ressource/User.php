@@ -62,15 +62,15 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
 
   // Helper to get a Thumb Url
 
-  public function getThumbUrl()
+  public function getThumbUrl($width = 'sq', $height = '50')
   {
     $thumbUrl = $this->thumbUrl;
-    $thumbUrl = str_replace('www.eyeem.com/thumb', "cdn.yemimg.com/thumb", $thumbUrl);
-    /*
-    if (Eyeem_Utils::getCurrentScheme() == 'https') {
-      $thumbUrl = str_replace('http://', 'https://', $thumbUrl);
+    if ($height != '50') {
+      $thumbUrl = str_replace('www.eyeem.com/thumb/sq/50/', "cdn.eyeem.com/thumb/sq/$height/", $thumbUrl);
     }
-    */
+    if ($width != 'sq') {
+      $thumbUrl = str_replace('www.eyeem.com/thumb/sq/', "cdn.eyeem.com/thumb/$width/", $thumbUrl);
+    }
     return $thumbUrl;
   }
 
