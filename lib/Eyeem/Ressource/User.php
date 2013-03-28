@@ -66,11 +66,12 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   {
     $thumbUrl = $this->thumbUrl;
     if ($height != '50') {
-      $thumbUrl = str_replace('www.eyeem.com/thumb/sq/50/', "cdn.eyeem.com/thumb/sq/$height/", $thumbUrl);
+      $thumbUrl = str_replace('/thumb/sq/50/', "/thumb/sq/$height/", $thumbUrl);
     }
     if ($width != 'sq') {
-      $thumbUrl = str_replace('www.eyeem.com/thumb/sq/', "cdn.eyeem.com/thumb/$width/", $thumbUrl);
+      $thumbUrl = str_replace('/thumb/sq/', "/thumb/$width/", $thumbUrl);
     }
+    $thumbUrl = str_replace('www.eyeem.com/thumb/', "cdn.eyeem.com/thumb/", $thumbUrl);
     return $thumbUrl;
   }
 
