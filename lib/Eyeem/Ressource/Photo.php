@@ -119,12 +119,14 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
   public function hide()
   {
     $result = $this->update(array('hide' => true));
+    $this->setAttribute('hidden', true);
     return $this;
   }
 
   public function unhide()
   {
     $result = $this->update(array('hide' => false));
+    $this->setAttribute('hidden', false);
     return $this;
   }
 

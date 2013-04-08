@@ -14,22 +14,10 @@ class Eyeem_RessourceIdCollection extends Eyeem_RessourceCollection
 
   public function getIds()
   {
-    // Local Cache
     if (isset($this->_ids)) {
       return $this->_ids;
     }
-    // From Cache?
-    $parent = $this->getParentRessource();
-    $cache = $this->getEyeem()->getCache();
-    $cacheKey = $parent::$name . '_' . $parent->getId() . '_' . $this->name . '_ids';
-    if (!$ids = $cache->get($cacheKey)) {
-      // Fresh!
-      $ids = $this->_fetchIds();
-      if ($cacheKey) {
-        $cache->set($cacheKey, $ids);
-      }
-    }
-    return $this->_ids = $ids;
+    return $this->_ids = $this->_fetchIds();
   }
 
   protected function _fetchIds()
@@ -42,22 +30,10 @@ class Eyeem_RessourceIdCollection extends Eyeem_RessourceCollection
     return $response[$this->idsRessourceName];
   }
 
-  public function flushAttributes()
+  public function flush()
   {
-    parent::flushAttributes();
+    parent::flush();
     $this->_ids = null;
-  }
-
-  public function flushCache()
-  {
-    parent::flushCache();
-    // Clear Local Cache
-    $this->_ids = null;
-    // Clear Cache
-    $parent = $this->getParentRessource();
-    $cache = $this->getEyeem()->getCache();
-    $cacheKey = $parent::$name . '_' . $parent->getId() . '_' . $this->name . '_ids';
-    $cache->delete($cacheKey);
   }
 
 }

@@ -41,27 +41,14 @@ class Eyeem
     return $url;
   }
 
-  public function getCache()
-  {
-    if (empty($this->cache)) {
-      $this->cache = new Eyeem_Cache();
-    }
-    return $this->cache;
-  }
-
-  public function setCache($cache)
-  {
-    $this->cache = $cache;
-  }
-
-  public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
+  public function request($endpoint, $method = 'GET', $params = array())
   {
     $request = array(
       'url'         => $this->getApiUrl($endpoint),
       'method'      => $method,
       'params'      => $params,
       'clientId'    => $this->getClientId(),
-      'accessToken' => $authenticated || $method != 'GET' ? $this->getAccessToken() : null
+      'accessToken' => $this->getAccessToken()
     );
     $response = Eyeem_Http::request($request);
     $array = json_decode($response['body'], true);
@@ -69,22 +56,6 @@ class Eyeem
       throw new Exception($array['message'], $response['code']);
     }
     return $array;
-  }
-
-  public function cachedGetRequest($endpoint, $params = array())
-  {
-    $cache = $this->getCache();
-    $cacheKey = md5($endpoint . http_build_query($params));
-    if (!$result = $cache->get($cacheKey)) {
-      $result = $this->request($endpoint, 'GET', $params);
-      $cache->set($cacheKey, $result);
-    }
-    return $result;
-  }
-
-  public function authenticatedRequest($endpoint, $method = 'GET', $params = array(), $authenticated = true)
-  {
-    return $this->request($endpoint, $method, $params, $authenticated);
   }
 
   public function getRessourceObject($type, $ressource = array())
@@ -123,28 +94,22 @@ class Eyeem
   public function login($email, $password)
   {
     $response = $this->request('/auth/login', 'POST', compact('email', 'password'));
-    $user = $response['user'];
-    $accessToken = $response['access_token'];
+    // Set Auth User
+    $this->_authUser = $this->getRessourceObject('authUser', $response['user']);
     // Update Access Token
-    $this->setAccessToken($accessToken);
-    // Update User Cache
-    $cacheKey = 'user' . '_' . $accessToken;
-    $this->getCache()->set($cacheKey, $user);
-    // Return Eyeem for chainability
+    $this->setAccessToken($response['access_token']);
+    // Return Eyeem (not response)
     return $this;
   }
 
   public function facebookLogin($fbUserId, $fbAccessToken, $fbAccessTokenExpires = null)
   {
     $response = $this->request('/auth/facebookLogin', 'POST', compact('fbUserId', 'fbAccessToken', 'fbAccessTokenExpires'));
-    $user = $response['user'];
-    $accessToken = $response['access_token'];
+    // Set Auth User
+    $this->_authUser = $this->getRessourceObject('authUser', $response['user']);
     // Update Access Token
-    $this->setAccessToken($accessToken);
-    // Update User Cache
-    $cacheKey = 'user' . '_' . $accessToken;
-    $this->getCache()->set($cacheKey, $user);
-    // Return Eyeem for chainability
+    $this->setAccessToken($response['access_token']);
+    // Return response (not EyeEm)
     return $response;
   }
 

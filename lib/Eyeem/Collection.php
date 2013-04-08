@@ -15,10 +15,6 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public $endpoint;
 
-  public $authenticated = false;
-
-  public $useCache = true;
-
   public static $properties = array(
     'offset',
     'limit',
@@ -88,20 +84,10 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     return $this->endpoint;
   }
 
-  public function getCacheKey($params = array())
-  {
-    // No cache for offset results
-    if (isset($params['offset']) && $params['offset'] > 0) {
-      return false;
-    }
-    $cacheKey = $this->name;
-    return $cacheKey;
-  }
-
   protected function _fetchCollection()
   {
     $params = $this->getQueryParameters();
-    $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params, $this->getAuthenticated());
+    $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params);
     if (empty($response[$this->name])) {
       throw new Exception("Missing collection in response ($this->name).");
     }
@@ -110,37 +96,25 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   protected function _getCollection()
   {
-    // Local Cache
     if (isset($this->_collection)) {
       return $this->_collection;
     }
-    // From Cache?
-    $params = $this->getQueryParameters();
-    $cache = $this->getEyeem()->getCache();
-    $useCache = $this->getUseCache();
-    $cacheKey = $this->getCacheKey($params);
-    if (!$useCache || !$cacheKey || !$value = $cache->get($cacheKey)) {
-      // Fresh!
-      $value = $this->_fetchCollection();
-      if ($useCache && $cacheKey) {
-        $cache->set($cacheKey, $value);
-      }
-    }
-    return $this->_collection = $value;
+    return $this->_collection = $this->_fetchCollection();
   }
 
   public function getItems()
   {
     // Do we have the right items?
+    // - non-matching offset
     if (isset($this->queryParameters['offset']) && $this->getOffset() !== null) {
       if ($this->queryParameters['offset'] != $this->getOffset()) {
-        $this->flushAttributes();
+        $this->flush();
       }
     }
-
+    // - non-matching limit
     if (isset($this->queryParameters['limit']) && $this->getLimit() !== null) {
       if ($this->queryParameters['limit'] > $this->getLimit() && $this->getTotal() > $this->getLimit()) {
-        $this->flushAttributes();
+        $this->flush();
       }
     }
 
@@ -150,8 +124,6 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
       if (!empty($this->queryParameters[$keyname]) && !empty($this->items)) {
         $first = $this->items[0];
         if (empty($first[$cname])) {
-          $this->flushAttributes();
-          // We better flush the cache and not only attributes
           $this->flush();
         }
       }
@@ -165,31 +137,13 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     return $this->items;
   }
 
-  public function flushCache()
-  {
-    $this->_collection = null;
-    $params = $this->getQueryParameters();
-    $cache = $this->getEyeem()->getCache();
-    $cacheKey = $this->getCacheKey($params);
-    if ($cacheKey) {
-      $cache->delete($cacheKey);
-    }
-  }
-
-  public function flushAttributes()
+  public function flush()
   {
     $this->_collection = null;
     $this->flushItems();
     $this->flushTotal();
     $this->flushOffset();
     $this->flushLimit();
-  }
-
-  public function flush()
-  {
-    $this->flushCache();
-    $this->flushItems();
-    $this->flushTotal();
   }
 
   public function getRessourceObject($ressource)
@@ -200,16 +154,6 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   public function hasMember($member)
   {
     $member = $this->getRessourceObject($member);
-
-    // From Cache
-    $cache = $this->getEyeem()->getCache();
-    $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
-    if ($cache && $cacheKey) {
-      $value = $cache->get($cacheKey);
-      if ($value !== null && $value != '') {
-        return $value === 1 ? true : false;
-      }
-    }
 
     // Optimised version up to LIMIT total likers
     if ($this->getTotal() <= $this->getLimit()) {
@@ -235,26 +179,12 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
       $value = false;
     }
 
-    // Set Cache
-    if ($cache && $cacheKey) {
-      $cache->set($cacheKey, ($value === true ? 1 : 0));
-    }
-
     return $value;
   }
 
   public function flushMember($member, $value = null)
   {
     $this->flush();
-    $cache = $this->getEyeem()->getCache();
-    $cacheKey = $this->getCacheKey() .  '_' . $member->getId();
-    if ($cache && $cacheKey) {
-      if ($value === null) {
-        $cache->delete($cacheKey);
-      } else {
-        $cache->set($cacheKey, ($value === true ? 1 : 0));
-      }
-    }
   }
 
   public function getLatest()

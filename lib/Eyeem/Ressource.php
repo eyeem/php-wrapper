@@ -113,15 +113,6 @@ class Eyeem_Ressource
     return $this->getAttributes(true);
   }
 
-  public function getCacheKey()
-  {
-    if (empty($this->id)) {
-      throw new Exception("Unknown id.");
-    }
-    $cacheKey = static::$name . '_' . $this->id;
-    return $cacheKey;
-  }
-
   public function getEndpoint()
   {
     if (empty($this->id)) {
@@ -150,13 +141,11 @@ class Eyeem_Ressource
     }
     $result = $response[$name];
 
-    // Pre-load collections
+    // Pre-load collections when available
     foreach (static::$collections as $key => $type) {
       if (isset($result[$key])) {
         $collection = $this->getCollection($key, false);
         $collection->setProperties($result[$key]);
-        // TODO: Fill cache with collections infos.
-        // TODO: Remove collections from result?
       }
     }
 
@@ -165,49 +154,26 @@ class Eyeem_Ressource
 
   protected function _getRessource()
   {
-    // Local Cache
     if (isset($this->_ressource)) {
       return $this->_ressource;
     }
-    // From Cache?
-    $cache = $this->getEyeem()->getCache();
-    $cacheKey = $this->getCacheKey();
-    if (!$cacheKey || !$value = $cache->get($cacheKey)) {
-      // Fresh!
-      $value = $this->fetch();
-      // Store ressource
-      if ($cacheKey) {
-        $cache->set($cacheKey, $value);
-      }
-    }
-    return $this->_ressource = $value;
+    return $this->_ressource = $this->fetch();
   }
 
-  public function updateCache($value)
+  public function flush()
   {
-    $cache = $this->getEyeem()->getCache();
-    $this->_ressource = $value;
-    $cacheKey = $this->getCacheKey();
-    $cache->set($cacheKey, $value);
-  }
-
-  public function flushCache()
-  {
-    $cache = $this->getEyeem()->getCache();
-    $cacheKey = $this->getCacheKey();
-    $cache->delete($cacheKey);
-    // Clean Local Ressource
     $this->_ressource = null;
+    $this->_attributes = array();
   }
 
   public function flushCollection($name = null)
   {
     if ($name && isset(static::$collections[$name])) {
+      $this->_ressource = null;
       unset($this->$name);
       $totalKey = 'total' . ucfirst($name);
       unset($this->$totalKey);
       unset($this->_attributes[$totalKey]);
-      $this->flushCache();
     }
   }
 
@@ -271,20 +237,19 @@ class Eyeem_Ressource
   public function update($params = array())
   {
     $response = $this->request($this->getEndpoint(), 'PUT', $params);
-    $this->flushCache();
+    $this->flush();
     return $response;
   }
 
   public function delete()
   {
     $response = $this->request($this->getEndpoint(), 'DELETE');
-    $this->flushCache();
     return true;
   }
 
-  public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
+  public function request($endpoint, $method = 'GET', $params = array())
   {
-    return $this->getEyeem()->request($endpoint, $method, $params, $authenticated);
+    return $this->getEyeem()->request($endpoint, $method, $params);
   }
 
   public function __get($key)

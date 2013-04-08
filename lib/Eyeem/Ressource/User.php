@@ -75,31 +75,6 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     return $thumbUrl;
   }
 
-  public function getCacheKey($params = array())
-  {
-    if (empty($this->id)) {
-      throw new Exception("Unknown id.");
-    }
-    $id = $this->id == 'me' ? $this->getEyeem()->getAccessToken() : $this->id;
-    $cacheKey =  static::$name . '_' . $id;
-    if (!empty($params)) {
-      $cacheKey .= '_' . http_build_query($params);
-    }
-    return $cacheKey;
-  }
-
-  public function flushCache()
-  {
-    $cache = $this->getEyeem()->getCache();
-    if ($id = $this->getId()) {
-      $cache->delete("user_$id");
-    }
-    if ($nickname = $this->getNickname()) {
-      $cache->delete("user_$nickname");
-    }
-    parent::flushCache();
-  }
-
   public function getFriendsPhotos($params = array())
   {
     /* Fix defaults in API */
@@ -165,22 +140,15 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function block()
   {
     $me = $this->getEyeem()->getAuthUser();
-    $result = $this->request($me->getEndpoint() . '/blocked/'. $this->getId(), 'PUT', array());    
+    $result = $this->request($me->getEndpoint() . '/blocked/' . $this->getId(), 'PUT', array());
     return $this;
   }
- 
- 
+
+
   public function unblock()
   {
     $me = $this->getEyeem()->getAuthUser();
-    $result = $this->request($me->getEndpoint() . '/blocked/'. $this->getId(), 'DELETE', array()); 
-    return $this;
-  }
-   
-  public function update($params = array())
-  {
-    $this->setAttributes($response['user']);
-    $this->updateCache($response['user']);
+    $result = $this->request($me->getEndpoint() . '/blocked/' . $this->getId(), 'DELETE', array());
     return $this;
   }
 
@@ -194,14 +162,14 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function hide()
   {
     $result = $this->request($this->getEndpoint() . '/hide', 'POST', array('hide' => true));
-    $this->flushCache();
+    $this->setAttribute('hidden', true);
     return $this;
   }
 
   public function unhide()
   {
     $result = $this->request($this->getEndpoint() . '/hide', 'POST', array('hide' => false));
-    $this->flushCache();
+    $this->setAttribute('hidden', false);
     return $this;
   }
 

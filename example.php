@@ -9,15 +9,6 @@ $eyeem->setClientId('CLIENT_ID');
 $eyeem->setClientSecret('CLIENT_SECRET');
 $eyeem->autoload();
 
-// Cache (optional)
-if (extension_loaded('memcache')) {
-  $memcache = new Memcache;
-  $memcache->addServer('localhost', 11211);
-  Eyeem_Cache::setMemcache($memcache);
-} elseif (is_writable(__DIR__ . '/tmp')) {
-  Eyeem_Cache::setTmpDir(__DIR__ . '/tmp');
-}
-
 // Sign Out
 if (isset($_GET['signout'])) {
   unset($_SESSION['token']);

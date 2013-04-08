@@ -11,26 +11,6 @@ class Eyeem_RessourceCollection extends Eyeem_Collection
     return $parentEndpoint . '/' . $this->name;
   }
 
-  public function getCacheKey($params = array())
-  {
-    // No cache for offset results
-    if (isset($params['offset']) && $params['offset'] > 0) {
-      return false;
-    }
-    $parent = $this->getParentRessource();
-    $cacheKey = $parent::$name . '_' . $parent->getId() . '_' . $this->name;
-    return $cacheKey;
-  }
-
-  public function flushAttributes()
-  {
-    $this->_collection = null;
-    $this->flushItems();
-    $this->flushTotal();
-    $this->flushOffset();
-    $this->flushLimit();
-  }
-
   public function flush()
   {
     parent::flush();

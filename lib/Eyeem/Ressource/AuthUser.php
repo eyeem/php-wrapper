@@ -20,40 +20,9 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     }
   }
 
-  public function getCacheKey($params = array())
-  {
-    if ($accessToken = $this->getEyeem()->getAccessToken()) {
-      $cacheKey = 'user' . '_' . $accessToken;
-      if (!empty($params)) {
-        $cacheKey .= '_' . http_build_query($params);
-      }
-      return $cacheKey;
-    }
-  }
-
-  public function flushCache()
-  {
-    // First flush AuthUser cache
-    $cache = $this->getEyeem()->getCache();
-    $cache->delete( $this->getCacheKey() );
-    // Then flush parent cache
-    parent::flushCache();
-  }
-
   public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
   {
     return parent::request($endpoint, $method, $params, true);
-  }
-
-  public function update($params = array())
-  {
-    $cache = $this->getEyeem()->getCache();
-    $response = $this->request($this->getEndpoint(), 'POST', $params);
-    $this->setAttributes($response['user']);
-    // Flush Public User cache
-    // we can't just update it because it may contains private informations at this point
-    parent::flushCache();
-    return $this;
   }
 
   /* Apps */
@@ -91,7 +60,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
   {
     $params['connect'] = 1;
     $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'POST', $params);
-    $this->flushCache();
+    $this->flush();
     return $result;
   }
 
@@ -99,14 +68,14 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
   {
     $params['keys'] = 1;
     $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'POST', $params);
-    $this->flushCache();
+    $this->flush();
     return $result;
   }
 
   public function socialMediaDisconnect($service)
   {
     $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'DELETE');
-    $this->flushCache();
+    $this->flush();
     return $result;
   }
 
@@ -115,14 +84,14 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     $params['callback'] = 1;
     $params = http_build_query($params);
     $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'POST', $params);
-    $this->flushCache();
+    $this->flush();
     return $result;
   }
 
   public function socialMediaUpdate($service, $params = array())
   {
     $result = $this->request($this->getEndpoint() . '/socialMedia/' . $service, 'PUT', $params);
-    $this->flushCache();
+    $this->flush();
     return $result;
   }
 
@@ -181,7 +150,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
   {
     $params = http_build_query($params);
     $result = $this->request($this->getEndpoint() . '/flags', 'POST', $params);
-    $this->flushCache();
+    $this->flush();
     return $result['flags'];
   }
 
@@ -191,7 +160,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
   {
     $params = array('user_id' => 'me');
     $result = $this->request('/auth/deleteUser', 'DELETE', $params, true);
-    $this->flushCache();
+    $this->flush();
     return true;
   }
 
@@ -208,7 +177,6 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
   {
     $params['q'] = $query;
     $result = $this->request('/users', 'GET', $params, true);
-    $this->flushCache();
     return $result['users'];
   }
 

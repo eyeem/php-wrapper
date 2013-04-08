@@ -144,6 +144,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   {
     $params = array('hide'=>true);
     $result = $this->request($this->getEndpoint() . '/hide', 'POST', $params);
+    $this->setAttribute('hidden', true);
     return $result;
   }
 
@@ -151,6 +152,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   {
     $params = array('hide'=>false);
     $result = $this->request($this->getEndpoint() . '/hide', 'POST', $params);
+    $this->setAttribute('hidden', false);
     return $result;
   }
 
@@ -159,7 +161,6 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
   public function confirmInvite($params = array())
   {
     $result = $this->request($this->getEndpoint().'/acceptInvite', 'POST', $params, true);
-    $this->flushCache();
     return $result;
   }
 
