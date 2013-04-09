@@ -102,39 +102,6 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $result['contacts'];
   }
 
-  /* Settings (deprecated) */
-
-  public function getSettings()
-  {
-    if (!$settings = $this->getAttribute('settings')) {
-      $this->flushCache();
-      $settings = $this->getAttribute('settings');
-    }
-    if (empty($settings)) {
-      $result = $this->request($this->getEndpoint() . '/settings');
-      $settings = $result['settings'];
-    }
-    return $settings;
-  }
-
-  public function setSettings($settings = array())
-  {
-    $params = array('settings' => $settings);
-    $params = http_build_query($params);
-    $result = $this->request($this->getEndpoint() . '/settings', 'POST', $params);
-    return $result['settings'];
-  }
-
-  /* News Settings (deprecated, replaced by flags) */
-
-  public function setNewsSettings($params = array())
-  {
-    $params = http_build_query($params);
-    $result = $this->request($this->getEndpoint() . '/newsSettings', 'POST', $params);
-    $this->flushCache();
-    return $result['newsSettings'];
-  }
-
   /* Flags */
 
   public function getFlags()

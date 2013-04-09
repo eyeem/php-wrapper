@@ -20,7 +20,11 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     'totalLikers',
     'totalContributors',
     'location',
-    'hidden'
+    /* Admin */
+    'hidden',
+    /* Auth User */
+    'muted',
+    'liked'
   );
 
   public static $collections = array(
@@ -142,7 +146,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
 
   public function hide($params = array())
   {
-    $params = array('hide'=>true);
+    $params = array('hide' => true);
     $result = $this->request($this->getEndpoint() . '/hide', 'POST', $params);
     $this->setAttribute('hidden', true);
     return $result;
@@ -150,7 +154,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
 
   public function unhide($params = array())
   {
-    $params = array('hide'=>false);
+    $params = array('hide' => false);
     $result = $this->request($this->getEndpoint() . '/hide', 'POST', $params);
     $this->setAttribute('hidden', false);
     return $result;
@@ -160,7 +164,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
 
   public function confirmInvite($params = array())
   {
-    $result = $this->request($this->getEndpoint().'/acceptInvite', 'POST', $params, true);
+    $result = $this->request($this->getEndpoint() . '/acceptInvite', 'POST', $params, true);
     return $result;
   }
 

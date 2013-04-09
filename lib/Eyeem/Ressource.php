@@ -51,10 +51,8 @@ class Eyeem_Ressource
         $this->$key = $value;
         $this->_attributes[$key] = $value;
       } elseif (in_array($key, static::$properties)) {
-        // $this->$key = $value;
         $this->_attributes[$key] = $value;
       } elseif (isset(static::$collections[$key])) {
-        // $this->$key = $value;
         $this->_attributes[$key] = $value;
       }
     }
@@ -105,12 +103,6 @@ class Eyeem_Ressource
       }
     }
     return $this;
-  }
-
-  /* deprecated */
-  public function getInfos()
-  {
-    return $this->getAttributes(true);
   }
 
   public function getEndpoint()
@@ -229,15 +221,13 @@ class Eyeem_Ressource
     return $this->_collections[$name] = $collection;
   }
 
-  public function save()
-  {
-    // TODO: implement saving an object
-  }
-
   public function update($params = array())
   {
-    $response = $this->request($this->getEndpoint(), 'PUT', $params);
+    $response = $this->request($this->getEndpoint(), 'POST', $params);
     $this->flush();
+    if (isset($response[static::$name])) {
+      $this->setAttributes($response[static::$name]);
+    }
     return $response;
   }
 
@@ -286,8 +276,10 @@ class Eyeem_Ressource
     // Flush methods
     if (substr($name, 0, 5) == 'flush') {
       $key = lcfirst(substr($name, 5));
-      // Default (write object property)
-      if (isset($this->$key)) unset($this->$key);
+      // Default (delete object property)
+      if (isset($this->$key)) {
+        unset($this->$key);
+      }
       return $this;
     }
     throw new Exception("Unknown method ($name).");

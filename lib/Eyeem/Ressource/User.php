@@ -32,6 +32,7 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     /* Settings */
     'settings',
     'newsSettings',
+    /* Auth User */
     'follower',
     'following',
     'restricted',
@@ -49,6 +50,19 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'apps' => 'app',
     'linkedApps' => 'app',
     'discoverAlbums' => 'album'
+  );
+
+  public static $parameters = array(
+    'detailed',
+    'includePhotos',
+    'numPhotos',
+    'photoDetails',
+    'photoLikers',
+    'photoNumLikers',
+    'photoComments',
+    'photoNumComments',
+    'photoAlbums',
+    'includeSettings'
   );
 
   public function getId()
@@ -143,7 +157,6 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     $result = $this->request($me->getEndpoint() . '/blocked/' . $this->getId(), 'PUT', array());
     return $this;
   }
-
 
   public function unblock()
   {

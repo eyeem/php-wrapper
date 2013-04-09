@@ -22,7 +22,7 @@ class Eyeem_Ressource_Comment extends Eyeem_Ressource
 
   public function getUser()
   {
-    $user = parent::getUser();
+    $user = $this->getAttribute('user');
     return $this->getRessourceObject('user', $user);
   }
 
@@ -33,9 +33,8 @@ class Eyeem_Ressource_Comment extends Eyeem_Ressource
 
   public function delete()
   {
-    parent::delete();
     $this->getPhoto()->getComments()->flush();
-    return true;
+    return parent::delete();
   }
 
 }

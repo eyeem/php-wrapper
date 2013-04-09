@@ -25,9 +25,11 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     'totalLikes',
     'totalComments',
     'frame',
-    'filter',    
+    'filter',
     /* Admin */
-    'hidden'
+    'hidden',
+    /* Auth User */
+    'liked'
   );
 
   public static $collections = array(
@@ -55,7 +57,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
 
   public function getUser()
   {
-    $user = parent::getUser();
+    $user = $this->getAttribute('user');
     return $this->getRessourceObject('user', $user);
   }
 
