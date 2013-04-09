@@ -20,9 +20,50 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     }
   }
 
-  public function request($endpoint, $method = 'GET', $params = array(), $authenticated = false)
+  /* Collections Status */
+
+  public function isFollowing($user)
   {
-    return parent::request($endpoint, $method, $params, true);
+    $user = $this->getEyeem()->getUser($user);
+    $attributes = $user->getAttributes();
+    if (isset($attributes['following'])) {
+      // Eyeem_Log::log('Eyeem_Ressource_AuthUser:isFollowing:' . $user->getId() . ':direct');
+      return $attributes['following'];
+    }
+    return $this->getFriends()->hasMember($user);
+  }
+
+  public function isFollowedBy($user)
+  {
+    $user = $this->getEyeem()->getUser($user);
+    $attributes = $user->getAttributes();
+    if (isset($attributes['follower'])) {
+      // Eyeem_Log::log('Eyeem_Ressource_AuthUser:isFollowedBy:' . $user->getId() . ':direct');
+      return $attributes['follower'];
+    }
+    return $this->getFollowers()->hasMember($user);
+  }
+
+  public function likesPhoto($photo)
+  {
+    $photo = $this->getEyeem()->getPhoto($photo);
+    $attributes = $photo->getAttributes();
+    if (isset($attributes['liked'])) {
+      // Eyeem_Log::log('Eyeem_Ressource_AuthUser:likesPhoto:' . $photo->getId() . ':direct');
+      return $attributes['liked'];
+    }
+    return $this->getLikedPhotos()->hasMember($photo);
+  }
+
+  public function likesAlbum($album)
+  {
+    $album = $this->getEyeem()->getAlbum($album);
+    $attributes = $album->getAttributes();
+    if (isset($attributes['favorited'])) {
+      // Eyeem_Log::log('Eyeem_Ressource_AuthUser:likesAlbum:' . $album->getId() . ':direct');
+      return $attributes['favorited'];
+    }
+    return $this->getLikedAlbums()->hasMember($album);
   }
 
   /* Apps */
