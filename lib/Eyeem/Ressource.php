@@ -67,16 +67,18 @@ class Eyeem_Ressource
     return $this->_attributes;
   }
 
-  public function getAttribute($key)
+  public function getAttribute($key, $fetch = true)
   {
     $attributes = $this->getAttributes();
     if (isset($attributes[$key])) {
       return $attributes[$key];
     }
-    // Eyeem_Log::log('Eyeem_Ressource:getAttribute:' . static::$name . ':' . $key);
-    $attributes = $this->getAttributes(true);
-    if (isset($attributes[$key])) {
-      return $attributes[$key];
+    if ($fetch) {
+      Eyeem_Log::log('Eyeem_Ressource:getAttribute:' . static::$name . ':' . $key);
+      $attributes = $this->getAttributes(true);
+      if (isset($attributes[$key])) {
+        return $attributes[$key];
+      }
     }
   }
 
@@ -201,7 +203,7 @@ class Eyeem_Ressource
 
     if ($autoload == true) {
       // If we have some properties already available (offset, limit, total, items)
-      if ($properties = $this->getAttribute($name)) {
+      if ($properties = $this->getAttribute($name, false)) {
         $collection->setProperties($properties);
       }
       // If we don't have the total in the collection properties
@@ -212,7 +214,7 @@ class Eyeem_Ressource
         } else {
           $totalKey = 'total' . ucfirst($name);
         }
-        if ($total = $this->getAttribute($totalKey)) {
+        if ($total = $this->getAttribute($totalKey, false)) {
           $collection->setTotal($total);
         }
       }
