@@ -70,7 +70,7 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 
   public function getApp($id)
   {
-    $apps = $this->getCollection('apps')->setAuthenticated(true);
+    $apps = $this->getCollection('apps');
     foreach ($apps as $app) {
       if ($id == $app->getId()) {
         return $app;
@@ -80,12 +80,12 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 
   public function getApps()
   {
-    return $this->getCollection('apps')->setAuthenticated(true);
+    return $this->getCollection('apps');
   }
 
   public function getLinkedApps()
   {
-    return $this->getCollection('linkedApps')->setAuthenticated(true);
+    return $this->getCollection('linkedApps');
   }
 
   public function authorizeApp($params)
@@ -174,9 +174,9 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 
   /* Discover */
 
-  public function getDiscoverAlbums()
+  public function getDiscoverAlbums($params = array())
   {
-    return $this->getCollection('discoverAlbums')->setAuthenticated(true);
+    return $this->getCollection('discoverAlbums')->setQueryParameters($params);;
   }
 
   /* Search Friends */
