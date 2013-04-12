@@ -69,16 +69,17 @@ class Eyeem_Ressource
 
   public function getAttribute($key, $fetch = true)
   {
+    if ($fetch === false) {
+      return isset($this->_attributes[$key]) ? $this->_attributes[$key] : null;
+    }
     $attributes = $this->getAttributes();
     if (isset($attributes[$key])) {
       return $attributes[$key];
     }
-    if ($fetch) {
-      Eyeem_Log::log('Eyeem_Ressource:getAttribute:' . static::$name . ':' . $key);
-      $attributes = $this->getAttributes(true);
-      if (isset($attributes[$key])) {
-        return $attributes[$key];
-      }
+    Eyeem_Log::log('Eyeem_Ressource:getAttribute:' . static::$name . ':' . $key);
+    $attributes = $this->getAttributes(true);
+    if (isset($attributes[$key])) {
+      return $attributes[$key];
     }
   }
 
