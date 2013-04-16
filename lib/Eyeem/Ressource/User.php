@@ -32,6 +32,8 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     /* Settings */
     'settings',
     'newsSettings',
+    /* Services */
+    'services',
     /* Auth User */
     'follower',
     'following',
@@ -190,9 +192,8 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
 
   public function getSocialMedia()
   {
-    $user = $this->getRawArray();
-    if (isset($user['services'])) {
-      return array('services' => $user['services']);
+    if ($services = $this->getAttribute('services', false)) {
+      return array('services' => $services);
     }
     return $this->request($this->getEndpoint() . '/socialMedia');
   }
