@@ -221,6 +221,13 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     return $this->getRessourceObject($response[$this->type]);
   }
 
+  public function toArray()
+  {
+    $array = array();
+    foreach ($this as $ressource) $array[] = $ressource;
+    return $array;
+  }
+
   public function __isset($key)
   {
     if (in_array($key, static::$properties)) {
