@@ -23,7 +23,7 @@ class Eyeem_RessourceIdCollection extends Eyeem_RessourceCollection
   protected function _fetchIds()
   {
     $params = array('onlyId' => true);
-    $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params, $this->getAuthenticated());
+    $response = $this->getEyeem()->request($this->getEndpoint(), 'GET', $params);
     if (!isset($response[$this->idsRessourceName])) {
       throw new Exception("Missing ressource in response ($this->idsRessourceName).");
     }
