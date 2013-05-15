@@ -95,6 +95,13 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $result;
   }
 
+  public function deauthorizeApp($id)
+  {
+    $params = [];
+    $result = $this->request($this->getCollection('linkedApps')->getEndpoint() . '/' . $id, 'DELETE', $params);
+    return $result;
+  }
+
   /* Social Media */
 
   public function socialMediaConnect($service, $params = array())
