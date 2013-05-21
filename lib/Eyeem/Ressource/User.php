@@ -61,6 +61,8 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
     'photoDetails',
     'photoLikers',
     'photoNumLikers',
+    'photoPeople',
+    'photoNumPeople',
     'photoComments',
     'photoNumComments',
     'photoAlbums',
@@ -94,7 +96,7 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function getFriendsPhotos($params = array())
   {
     /* Fix defaults in API */
-    $default_params = array('includeComments' => false, 'includeLikers' => false);
+    $default_params = array('includeComments' => false, 'includeLikers' => false, 'includePeople' => false);
     $params = array_merge($default_params, $params);
     return $this->getCollection('friendsPhotos')->setQueryParameters($params);
   }
