@@ -87,11 +87,11 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     return $this->getLikers()->hasMember($user);
   }
 
-  public function hasTaggedPerson($eyeemId)
+  public function hasTaggedPerson($user)
   {
     if ($this->getTotalPeople() > 0) {
       foreach ($this->getPeople()->getItems() as $person) {
-        if ($person['serviceType'] == "eyeem" && $person['serviceId'] == $eyeemId) {
+        if ($person['serviceType'] == "eyeem" && $person['serviceId'] == $user->getId()) {
           return true;
         }
       }
@@ -117,11 +117,10 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     return $this;
   }
 
-  public function untag($offense)
+  public function untag($user, $offense = '')
   {
-    $params = array('offense' => $offense);
-    $me = $this->getEyeem()->getAuthUser();
-    $this->getPeople()->remove($me);
+    $params = array('taggedPerson' => 'eyeem:' . $user->getId(), 'offense' => $offense);
+    $result = $this->request($this->getEndpoint() . '/people', 'DELETE', $params);
     return $this;
   }
 
