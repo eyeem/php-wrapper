@@ -89,6 +89,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
 
   public function hasTaggedPerson($user)
   {
+    $user = $this->getEyeem()->getUser($user);
     if ($this->getTotalPeople() > 0) {
       foreach ($this->getPeople()->getItems() as $person) {
         if ($person['serviceType'] == "eyeem" && $person['serviceId'] == $user->getId()) {
@@ -119,6 +120,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
 
   public function untag($user, $offense = '')
   {
+    $user = $this->getEyeem()->getUser($user);
     $params = array('taggedPerson' => 'eyeem:' . $user->getId(), 'offense' => $offense);
     $result = $this->request($this->getEndpoint() . '/people', 'DELETE', $params);
     return $this;
