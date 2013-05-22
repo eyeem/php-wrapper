@@ -31,6 +31,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     'numComments',
     'includeLikers',
     'numLikers',
+    'includePeople',
+    'numPeople',
     'includePhotos',
     'numPhotos',
     'includeAlbums',
