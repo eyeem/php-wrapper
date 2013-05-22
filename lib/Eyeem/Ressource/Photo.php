@@ -24,6 +24,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     'longitude',
     'totalLikes',
     'totalComments',
+    'totalPeople',
     'frame',
     'filter',
     /* Admin */
@@ -33,6 +34,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
   );
 
   public static $collections = array(
+    'people' => 'user',
     'likers' => 'user',
     'albums' => 'album',
     'comments' => 'comment'
@@ -44,6 +46,8 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     'numComments',
     'includeLikers',
     'numLikers',
+    'includePeople',
+    'numPeople',
     'includeAlbums',
     'numAlbums',
     'userDetails'
@@ -51,6 +55,7 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
 
   protected $_queryParameters = array(
     'includeComments' => false,
+    'includePeople' => false,
     'includeLikers' => false,
     'includeAlbums' => false
   );
@@ -82,6 +87,19 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     return $this->getLikers()->hasMember($user);
   }
 
+  public function hasTaggedPerson($user)
+  {
+    $user = $this->getEyeem()->getUser($user);
+    if ($this->getTotalPeople() > 0) {
+      foreach ($this->getPeople()->getItems() as $person) {
+        if ($person['serviceType'] == "eyeem" && $person['serviceId'] == $user->getId()) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
   // For Authenticated Users
 
   public function like()
@@ -97,6 +115,14 @@ class Eyeem_Ressource_Photo extends Eyeem_Ressource
     $me = $this->getEyeem()->getAuthUser();
     $this->getLikers()->remove($me);
     $me->getLikedPhotos()->flushMember($this, false);
+    return $this;
+  }
+
+  public function untag($user, $offense = '')
+  {
+    $user = $this->getEyeem()->getUser($user);
+    $params = array('taggedPerson' => 'eyeem:' . $user->getId(), 'offense' => $offense);
+    $result = $this->request($this->getEndpoint() . '/people', 'DELETE', $params);
     return $this;
   }
 
