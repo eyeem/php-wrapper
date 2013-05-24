@@ -3,6 +3,8 @@
 class Eyeem_Ressource_Comment extends Eyeem_Ressource
 {
 
+  public static $attrs;
+
   public static $name = 'comment';
 
   public static $endpoint = '/comments/{id}';

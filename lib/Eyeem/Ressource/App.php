@@ -3,6 +3,8 @@
 class Eyeem_Ressource_App extends Eyeem_Ressource
 {
 
+  public static $attrs;
+
   public static $name = 'app';
 
   public static $endpoint = '/apps/{id}';

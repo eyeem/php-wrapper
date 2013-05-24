@@ -3,6 +3,8 @@
 class Eyeem_Ressource_Photo extends Eyeem_Ressource
 {
 
+  public static $attrs;
+
   public static $name = 'photo';
 
   public static $endpoint = '/photos/{id}';

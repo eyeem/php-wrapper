@@ -3,6 +3,8 @@
 class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 {
 
+  public static $attrs;
+
   public static $parameters = array(
     'includeSettings'
   );

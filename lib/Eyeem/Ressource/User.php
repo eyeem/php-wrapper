@@ -3,6 +3,8 @@
 class Eyeem_Ressource_User extends Eyeem_Ressource
 {
 
+  public static $attrs;
+
   public static $name = 'user';
 
   public static $endpoint = '/users/{id}';

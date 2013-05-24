@@ -1,6 +1,6 @@
 <?php
 
-class Eyeem_Ressource
+abstract class Eyeem_Ressource
 {
 
   /* Context */
@@ -8,6 +8,8 @@ class Eyeem_Ressource
   protected $eyeem = null;
 
   /* Static Properties */
+
+  public static $attrs;
 
   public static $name;
 
@@ -35,22 +37,24 @@ class Eyeem_Ressource
 
   public function __construct($params = array())
   {
-    if (is_int($params) || is_string($params)) {
-      $this->id = $params;
-    }
     if (is_array($params)) {
       $this->setAttributes($params);
+    } elseif (is_int($params) || is_string($params)) {
+      $this->id = $params;
     }
   }
 
   public function setAttributes($infos = array())
   {
+    if (!isset(static::$attrs)) {
+      static::$attrs = array_flip(static::$properties);
+    }
     foreach ($infos as $key => $value) {
       // Special Attributes
       if ($key == 'id' || $key == 'updated') {
         $this->$key = $value;
         $this->_attributes[$key] = $value;
-      } elseif (in_array($key, static::$properties)) {
+      } elseif (isset(static::$attrs[$key])) {
         $this->_attributes[$key] = $value;
       } elseif (isset(static::$collections[$key])) {
         $this->_attributes[$key] = $value;
@@ -73,7 +77,7 @@ class Eyeem_Ressource
       return isset($this->_attributes[$key]) ? $this->_attributes[$key] : null;
     }
     $attributes = $this->getAttributes();
-    if (isset($attributes[$key])) {
+    if (isset($attributes[$key]) || array_key_exists($key, $attributes)) {
       return $attributes[$key];
     }
     Eyeem_Log::log('Eyeem_Ressource:getAttribute:' . static::$name . ':' . $key);
@@ -247,7 +251,10 @@ class Eyeem_Ressource
 
   public function __get($key)
   {
-    if (!in_array($key, static::$properties)) {
+    if (!isset(static::$attrs)) {
+      static::$attrs = array_flip(static::$properties);
+    }
+    if (!isset(static::$attrs[$key])) {
       throw new Exception("Unknown property ($key).");
     }
     $value = $this->getAttribute($key);
@@ -256,9 +263,10 @@ class Eyeem_Ressource
 
   public function __call($name, $arguments)
   {
+    $actions = array('get', 'set', 'flush');
+    list($action, $key) = isset(Eyeem_Runtime::$cc[$name]) ? Eyeem_Runtime::$cc[$name] : Eyeem_Runtime::cc($name, $actions);
     // Get methods
-    if (substr($name, 0, 3) == 'get') {
-      $key = lcfirst(substr($name, 3));
+    if ($action == 'get') {
       // Collection Objects
       if (isset(static::$collections[$key])) {
         $parameters = isset($arguments[0]) ? $arguments[0] : array();
@@ -270,15 +278,13 @@ class Eyeem_Ressource
       return $this->$key;
     }
     // Set methods
-    if (substr($name, 0, 3) == 'set') {
-      $key = lcfirst(substr($name, 3));
+    elseif ($action == 'set') {
       // Default (write object property)
       $this->$key = $arguments[0];
       return $this;
     }
     // Flush methods
-    if (substr($name, 0, 5) == 'flush') {
-      $key = lcfirst(substr($name, 5));
+    elseif ($action == 'flush') {
       // Default (delete object property)
       if (isset($this->$key)) {
         unset($this->$key);
