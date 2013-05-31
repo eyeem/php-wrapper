@@ -293,9 +293,10 @@ class Eyeem
 
   public function __call($name, $arguments)
   {
+    $actions = array('get', 'set');
+    list($action, $key) = isset(Eyeem_Runtime::$cc[$name]) ? Eyeem_Runtime::$cc[$name] : Eyeem_Runtime::cc($name, $actions);
     // Get methods
-    if (substr($name, 0, 3) == 'get') {
-      $key = lcfirst(substr($name, 3));
+    if ($action == 'get') {
       // Ressource Objects
       if (in_array($key, $this->_ressources)) {
         return $this->getRessourceObject($key, $arguments[0]);
@@ -304,8 +305,7 @@ class Eyeem
       return $this->$key;
     }
     // Set methods
-    if (substr($name, 0, 3) == 'set') {
-      $key = lcfirst(substr($name, 3));
+    elseif ($action == 'set') {
       // Default (write object property)
       $this->$key = $arguments[0];
       return $this;

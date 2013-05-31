@@ -249,22 +249,21 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public function __call($name, $arguments)
   {
+    $actions = array('get', 'set', 'flush');
+    list($action, $key) = isset(Eyeem_Runtime::$cc[$name]) ? Eyeem_Runtime::$cc[$name] : Eyeem_Runtime::cc($name, $actions);
     // Get methods
-    if (substr($name, 0, 3) == 'get') {
-      $key = lcfirst(substr($name, 3));
+    if ($action == 'get') {
       // Default (read object property)
       return $this->$key;
     }
     // Set methods
-    if (substr($name, 0, 3) == 'set') {
-      $key = lcfirst(substr($name, 3));
+    elseif ($action == 'set') {
       // Default (write object property)
       $this->$key = $arguments[0];
       return $this;
     }
     // Flush methods
-    if (substr($name, 0, 5) == 'flush') {
-      $key = lcfirst(substr($name, 5));
+    elseif ($action == 'flush') {
       // Default (flush object property)
       $this->$key = null;
       unset($this->$key);
