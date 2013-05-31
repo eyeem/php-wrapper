@@ -1,16 +1,29 @@
 Basics
 ======
 
-Initialising
+Installation
 ------------
 
-```php
-require_once 'lib/Eyeem.php';
+With Composer, create a `composer.json` file and run the `php composer.phar install` command to install it:
 
+    {
+        "require": {
+            "eyeem/php-wrapper": "~2.1"
+        }
+    }
+
+Without Composer, clone this repository and include the autoload file:
+
+```php
+require_once __DIR__ . '/eyeem/API-php-wrapper/autoload.php';
+```
+
+Then instanciate the class and set your client_id and client_secret:
+
+```php
 $eyeem = new Eyeem();
 $eyeem->setClientId('CLIENT_ID');
 $eyeem->setClientSecret('CLIENT_SECRET');
-$eyeem->autoload();
 ```
 
 Resources
