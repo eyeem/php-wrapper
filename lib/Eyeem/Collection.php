@@ -175,13 +175,11 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
     Eyeem_Log::log('Eyeem_Collection:' . $this->name . ':hasMember:direct');
     try {
-      $response = $this->getEyeem()->request($endpoint, 'GET');
-      $value = true;
+      $this->getEyeem()->request($endpoint, 'GET');
+      return true;
     } catch (Exception $e) {
-      $value = false;
+      return false;
     }
-
-    return $value;
   }
 
   public function flushMember($member, $value = null)
@@ -202,7 +200,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   {
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
-    $response = $this->getEyeem()->request($endpoint, 'PUT');
+    $this->getEyeem()->request($endpoint, 'PUT');
     $this->flushMember($member, true);
     return $this;
   }
@@ -211,7 +209,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   {
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
-    $response = $this->getEyeem()->request($endpoint, 'DELETE');
+    $this->getEyeem()->request($endpoint, 'DELETE');
     $this->flushMember($member, false);
     return $this;
   }

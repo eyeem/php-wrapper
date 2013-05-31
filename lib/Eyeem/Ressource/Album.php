@@ -53,7 +53,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
 
   public function getThumbUrl($width = 'sq', $height = '200')
   {
-    $thumbUrl = $this->thumbUrl;
+    $thumbUrl = $this->getAttribute('thumbUrl');
     if ($height != '200') {
       $thumbUrl = str_replace('/thumb/sq/200/', "/thumb/sq/$height/", $thumbUrl);
     }

@@ -90,7 +90,7 @@ abstract class Eyeem_Ressource
   public function isValid()
   {
     try {
-      $attributes = $this->getAttributes(true);
+      $this->getAttributes(true);
       return true;
     } catch (Exception $e) {
       return false;
@@ -240,7 +240,7 @@ abstract class Eyeem_Ressource
 
   public function delete()
   {
-    $response = $this->request($this->getEndpoint(), 'DELETE');
+    $this->request($this->getEndpoint(), 'DELETE');
     return true;
   }
 

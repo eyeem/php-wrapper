@@ -84,7 +84,7 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
 
   public function getThumbUrl($width = 'sq', $height = '50')
   {
-    $thumbUrl = $this->thumbUrl;
+    $thumbUrl = $this->getAttribute('thumbUrl');
     if ($height != '50') {
       $thumbUrl = str_replace('/thumb/sq/50/', "/thumb/sq/$height/", $thumbUrl);
     }
@@ -160,14 +160,14 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
   public function block()
   {
     $me = $this->getEyeem()->getAuthUser();
-    $result = $this->request($me->getEndpoint() . '/blocked/' . $this->getId(), 'PUT', array());
+    $this->request($me->getEndpoint() . '/blocked/' . $this->getId(), 'PUT', array());
     return $this;
   }
 
   public function unblock()
   {
     $me = $this->getEyeem()->getAuthUser();
-    $result = $this->request($me->getEndpoint() . '/blocked/' . $this->getId(), 'DELETE', array());
+    $this->request($me->getEndpoint() . '/blocked/' . $this->getId(), 'DELETE', array());
     return $this;
   }
 
@@ -180,14 +180,14 @@ class Eyeem_Ressource_User extends Eyeem_Ressource
 
   public function hide()
   {
-    $result = $this->request($this->getEndpoint() . '/hide', 'POST', array('hide' => true));
+    $this->request($this->getEndpoint() . '/hide', 'POST', array('hide' => true));
     $this->setAttribute('hidden', true);
     return $this;
   }
 
   public function unhide()
   {
-    $result = $this->request($this->getEndpoint() . '/hide', 'POST', array('hide' => false));
+    $this->request($this->getEndpoint() . '/hide', 'POST', array('hide' => false));
     $this->setAttribute('hidden', false);
     return $this;
   }
