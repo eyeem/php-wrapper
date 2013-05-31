@@ -62,6 +62,11 @@ abstract class Eyeem_Ressource
     }
   }
 
+  public function setAttribute($key, $value)
+  {
+    $this->setAttributes(array($key => $value));
+  }
+
   public function getAttributes($force = false)
   {
     if (empty($this->_attributes) || $force) {
