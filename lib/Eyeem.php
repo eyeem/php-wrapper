@@ -3,7 +3,7 @@
 class Eyeem
 {
 
-  public $baseUrl = 'https://www.eyeem.com/api/v2';
+  public $baseUrl = 'https://api.eyeem.com/api/v2';
 
   public $authorizeUrl = 'https://www.eyeem.com/oauth/authorize';
 
