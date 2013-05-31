@@ -14,14 +14,14 @@ class Eyeem_Log
 
   public static function log($message = '')
   {
-
     if (isset(self::$file)) {
-      global $eyeem, $eyeem_userid;
-      $current_user = isset($eyeem_userid) ? $eyeem_userid : 'anonymous';
       if (empty(self::$handle)) {
         self::$handle = fopen(self::$file, "a");
       }
-      fwrite(self::$handle, date("Y-m-d H:i:s") . " - " . $current_user .  " - " . $message . "\n");
+      fwrite(self::$handle, date("Y-m-d H:i:s") . " - " . $message . "\n");
+    }
+    if (php_sapi_name() == 'cli-server') {
+      error_log($message);
     }
   }
 
