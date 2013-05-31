@@ -7,13 +7,13 @@ class Eyeem
 
   public $authorizeUrl = 'https://www.eyeem.com/oauth/authorize';
 
-  public $clientId = null;
+  public $clientId;
 
-  public $clientSecret = null;
+  public $clientSecret;
 
-  public $accessToken = null;
+  public $accessToken;
 
-  protected $_authUser = null;
+  protected $_authUser;
 
   protected $_ressources = array(
     'user', 'album', 'photo', 'comment', 'app'

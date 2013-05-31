@@ -5,7 +5,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   /* Context */
 
-  protected $eyeem = null;
+  protected $eyeem;
 
   /* Object Properties */
 
@@ -14,6 +14,14 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   public $type;
 
   public $endpoint;
+
+  public $offset;
+
+  public $limit;
+
+  public $total;
+
+  public $items;
 
   public static $properties = array(
     'offset',
@@ -50,7 +58,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     'suggested'
   );
 
-  protected $_collection = null;
+  protected $_collection;
 
   protected $queryParameters = array(
     'detailed' => true,

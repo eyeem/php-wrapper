@@ -5,7 +5,7 @@ abstract class Eyeem_Ressource
 
   /* Context */
 
-  protected $eyeem = null;
+  protected $eyeem;
 
   /* Static Properties */
 
@@ -27,7 +27,7 @@ abstract class Eyeem_Ressource
 
   public $updated;
 
-  protected $_ressource = null;
+  protected $_ressource;
 
   protected $_attributes = array();
 

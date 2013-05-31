@@ -3,9 +3,9 @@
 class Eyeem_Log
 {
 
-  public static $file = null;
+  public static $file;
 
-  protected static $handle = null;
+  protected static $handle;
 
   public static function setFile($file)
   {
