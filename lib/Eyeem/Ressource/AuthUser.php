@@ -152,24 +152,6 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
     return $result['contacts'];
   }
 
-  /* Flags */
-
-  public function getFlags()
-  {
-    if ($newsSettings = $this->getAttribute('newsSettings')) {
-      return $newsSettings;
-    }
-    $result = $this->request($this->getEndpoint() . '/flags');
-    return $result['flags'];
-  }
-
-  public function setFlags($params = array())
-  {
-    $params = http_build_query($params);
-    $result = $this->request($this->getEndpoint() . '/flags', 'POST', $params);
-    $this->flush();
-    return $result['flags'];
-  }
 
   /* Delete */
 
