@@ -53,7 +53,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
 
   public function getThumbUrl($width = 'sq', $height = '200')
   {
-    $thumbUrl = $this->thumbUrl;
+    $thumbUrl = $this->getAttribute('thumbUrl');
     if ($height != '200') {
       $thumbUrl = str_replace('/thumb/sq/200/', "/thumb/sq/$height/", $thumbUrl);
     }
@@ -128,14 +128,7 @@ class Eyeem_Ressource_Album extends Eyeem_Ressource
     return $this;
   }
 
-  // Open Graph
-
-  public function discover($params = array())
-  {
-    $params = array();
-    $result = $this->request($this->getEndpoint() . '/discover', 'POST', $params);
-    return $result;
-  }
+  // View
 
   public function view($params = array())
   {

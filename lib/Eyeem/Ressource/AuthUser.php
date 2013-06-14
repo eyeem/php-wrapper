@@ -147,36 +147,18 @@ class Eyeem_Ressource_AuthUser extends Eyeem_Ressource_User
 
   public function getSmContacts($service)
   {
-    $params['matchContacts'] = 1;
+    $params = array('matchContacts' => 1);
     $result = $this->request($this->getEndpoint() . '/smContacts/' . $service, 'GET', $params);
     return $result['contacts'];
   }
 
-  /* Flags */
-
-  public function getFlags()
-  {
-    if ($newsSettings = $this->getAttribute('newsSettings')) {
-      return $newsSettings;
-    }
-    $result = $this->request($this->getEndpoint() . '/flags');
-    return $result['flags'];
-  }
-
-  public function setFlags($params = array())
-  {
-    $params = http_build_query($params);
-    $result = $this->request($this->getEndpoint() . '/flags', 'POST', $params);
-    $this->flush();
-    return $result['flags'];
-  }
 
   /* Delete */
 
   public function delete()
   {
     $params = array('user_id' => 'me');
-    $result = $this->request('/auth/deleteUser', 'DELETE', $params, true);
+    $this->request('/auth/deleteUser', 'DELETE', $params, true);
     $this->flush();
     return true;
   }

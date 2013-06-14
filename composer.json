@@ -1,0 +1,22 @@
+{
+    "name": "eyeem/php-wrapper",
+    "type": "library",
+    "description": "Wrapper for Eyeem API V2 and PHP 5.3",
+    "homepage": "https://github.com/eyeem/API-php-wrapper",
+    "license": "Apache",
+    "authors": [
+        {
+            "name": "François Hodierne",
+            "email": "francois@eyeem.com",
+            "homepage": "http://www.eyeem.com/znarf",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "ext-curl": "*"
+    },
+    "autoload": {
+        "files": ["autoload.php"]
+    }
+}

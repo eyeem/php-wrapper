@@ -5,7 +5,7 @@ abstract class Eyeem_Ressource
 
   /* Context */
 
-  protected $eyeem = null;
+  protected $eyeem;
 
   /* Static Properties */
 
@@ -27,7 +27,7 @@ abstract class Eyeem_Ressource
 
   public $updated;
 
-  protected $_ressource = null;
+  protected $_ressource;
 
   protected $_attributes = array();
 
@@ -62,6 +62,11 @@ abstract class Eyeem_Ressource
     }
   }
 
+  public function setAttribute($key, $value)
+  {
+    $this->setAttributes(array($key => $value));
+  }
+
   public function getAttributes($force = false)
   {
     if (empty($this->_attributes) || $force) {
@@ -90,7 +95,7 @@ abstract class Eyeem_Ressource
   public function isValid()
   {
     try {
-      $attributes = $this->getAttributes(true);
+      $this->getAttributes(true);
       return true;
     } catch (Exception $e) {
       return false;
@@ -240,7 +245,7 @@ abstract class Eyeem_Ressource
 
   public function delete()
   {
-    $response = $this->request($this->getEndpoint(), 'DELETE');
+    $this->request($this->getEndpoint(), 'DELETE');
     return true;
   }
 

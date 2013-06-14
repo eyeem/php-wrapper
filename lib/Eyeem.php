@@ -3,17 +3,17 @@
 class Eyeem
 {
 
-  public $baseUrl = 'https://www.eyeem.com/api/v2';
+  public $baseUrl = 'https://api.eyeem.com/api/v2';
 
   public $authorizeUrl = 'https://www.eyeem.com/oauth/authorize';
 
-  public $clientId = null;
+  public $clientId;
 
-  public $clientSecret = null;
+  public $clientSecret;
 
-  public $accessToken = null;
+  public $accessToken;
 
-  protected $_authUser = null;
+  protected $_authUser;
 
   protected $_ressources = array(
     'user', 'album', 'photo', 'comment', 'app'
@@ -85,7 +85,7 @@ class Eyeem
     if (isset($this->_authUser)) {
       return $this->_authUser;
     }
-    if ($accessToken = $this->getAccessToken()) {
+    if ($this->getAccessToken()) {
       return $this->_authUser = $this->getRessourceObject('authUser', $params);
     }
     throw new Exception('User is not autenticated (no Access Token set).', 401);
@@ -293,9 +293,10 @@ class Eyeem
 
   public function __call($name, $arguments)
   {
+    $actions = array('get', 'set');
+    list($action, $key) = isset(Eyeem_Runtime::$cc[$name]) ? Eyeem_Runtime::$cc[$name] : Eyeem_Runtime::cc($name, $actions);
     // Get methods
-    if (substr($name, 0, 3) == 'get') {
-      $key = lcfirst(substr($name, 3));
+    if ($action == 'get') {
       // Ressource Objects
       if (in_array($key, $this->_ressources)) {
         return $this->getRessourceObject($key, $arguments[0]);
@@ -304,8 +305,7 @@ class Eyeem
       return $this->$key;
     }
     // Set methods
-    if (substr($name, 0, 3) == 'set') {
-      $key = lcfirst(substr($name, 3));
+    elseif ($action == 'set') {
       // Default (write object property)
       $this->$key = $arguments[0];
       return $this;

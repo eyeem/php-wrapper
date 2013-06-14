@@ -5,7 +5,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   /* Context */
 
-  protected $eyeem = null;
+  protected $eyeem;
 
   /* Object Properties */
 
@@ -14,6 +14,14 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   public $type;
 
   public $endpoint;
+
+  public $offset;
+
+  public $limit;
+
+  public $total;
+
+  public $items;
 
   public static $properties = array(
     'offset',
@@ -50,7 +58,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     'suggested'
   );
 
-  protected $_collection = null;
+  protected $_collection;
 
   protected $queryParameters = array(
     'detailed' => true,
@@ -175,13 +183,11 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
     Eyeem_Log::log('Eyeem_Collection:' . $this->name . ':hasMember:direct');
     try {
-      $response = $this->getEyeem()->request($endpoint, 'GET');
-      $value = true;
+      $this->getEyeem()->request($endpoint, 'GET');
+      return true;
     } catch (Exception $e) {
-      $value = false;
+      return false;
     }
-
-    return $value;
   }
 
   public function flushMember($member, $value = null)
@@ -202,7 +208,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   {
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
-    $response = $this->getEyeem()->request($endpoint, 'PUT');
+    $this->getEyeem()->request($endpoint, 'PUT');
     $this->flushMember($member, true);
     return $this;
   }
@@ -211,7 +217,7 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
   {
     $member = $this->getRessourceObject($member);
     $endpoint = $this->getEndpoint() . '/' . $member->getId();
-    $response = $this->getEyeem()->request($endpoint, 'DELETE');
+    $this->getEyeem()->request($endpoint, 'DELETE');
     $this->flushMember($member, false);
     return $this;
   }
@@ -249,22 +255,21 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public function __call($name, $arguments)
   {
+    $actions = array('get', 'set', 'flush');
+    list($action, $key) = isset(Eyeem_Runtime::$cc[$name]) ? Eyeem_Runtime::$cc[$name] : Eyeem_Runtime::cc($name, $actions);
     // Get methods
-    if (substr($name, 0, 3) == 'get') {
-      $key = lcfirst(substr($name, 3));
+    if ($action == 'get') {
       // Default (read object property)
       return $this->$key;
     }
     // Set methods
-    if (substr($name, 0, 3) == 'set') {
-      $key = lcfirst(substr($name, 3));
+    elseif ($action == 'set') {
       // Default (write object property)
       $this->$key = $arguments[0];
       return $this;
     }
     // Flush methods
-    if (substr($name, 0, 5) == 'flush') {
-      $key = lcfirst(substr($name, 5));
+    elseif ($action == 'flush') {
       // Default (flush object property)
       $this->$key = null;
       unset($this->$key);
