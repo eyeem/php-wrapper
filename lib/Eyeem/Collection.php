@@ -15,14 +15,6 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
 
   public $endpoint;
 
-  public $offset;
-
-  public $limit;
-
-  public $total;
-
-  public $items;
-
   public static $properties = array(
     'offset',
     'limit',
