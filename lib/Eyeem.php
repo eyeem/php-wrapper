@@ -250,6 +250,16 @@ class Eyeem
 
   // Suggested / Recommended / Popular
 
+  public function getAggregatedNews($params = array())
+  {
+    return $this->request('/news/aggregated', 'GET', $params)['news'];
+  }
+
+  public function markNewsAsRead($news_id)
+  {
+    return $this->request('/news/' . $news_id . '/read', 'POST', ['include_older' => 1]);
+  }
+
   public function getSuggestedUsers($params = array())
   {
     $params['suggested'] = true;
