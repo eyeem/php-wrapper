@@ -301,6 +301,11 @@ class Eyeem
     return $collection;
   }
 
+  public function getCurrentMissions($params = array())
+  {
+    return $this->request('/missions/lightweight', 'GET', $params)['missions'];
+  }
+
   public function __call($name, $arguments)
   {
     $actions = array('get', 'set');
