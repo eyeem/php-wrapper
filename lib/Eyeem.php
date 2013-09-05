@@ -88,7 +88,7 @@ class Eyeem
     if ($this->getAccessToken()) {
       return $this->_authUser = $this->getRessourceObject('authUser', $params);
     }
-    throw new Exception('User is not autenticated (no Access Token set).', 401);
+    throw new Exception('User is not authenticated (no Access Token set).', 401);
   }
 
   public function login($email, $password)
