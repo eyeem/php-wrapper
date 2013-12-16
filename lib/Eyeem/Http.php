@@ -32,7 +32,12 @@ class Eyeem_Http
       } elseif (isset($clientId)) {
         $headers[] = "X-Client-Id: $clientId";
       }
-      $headers[] = "X-Api-Version: 2.1.0";
+
+      if($header)
+      {
+          $headers = array_merge($headers, $header);
+      }
+
       // Parameters
       if (!empty($params)) {
         switch ($method) {

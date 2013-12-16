@@ -41,14 +41,15 @@ class Eyeem
     return $url;
   }
 
-  public function request($endpoint, $method = 'GET', $params = array())
+  public function request($endpoint, $method = 'GET', $params = array(), $header = array())
   {
     $request = array(
       'url'         => $this->getApiUrl($endpoint),
       'method'      => $method,
       'params'      => $params,
       'clientId'    => $this->getClientId(),
-      'accessToken' => $this->getAccessToken()
+      'accessToken' => $this->getAccessToken(),
+      'header'      => $header
     );
     $response = Eyeem_Http::request($request);
     $array = json_decode($response['body'], true);
