@@ -17,6 +17,8 @@
         "ext-curl": "*"
     },
     "autoload": {
-        "files": ["autoload.php"]
+        "classmap": {
+            "Eyeem": "lib/"
+        }
     }
 }
