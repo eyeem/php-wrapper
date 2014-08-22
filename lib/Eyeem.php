@@ -18,7 +18,23 @@ class Eyeem
   protected $_ressources = array(
     'user', 'album', 'photo', 'comment', 'app'
   );
-    
+
+  public static function autoload()
+  {
+    spl_autoload_register(array('self', 'loader'));
+  }
+
+  public static function loader($className)
+  {
+    if (strpos($className, 'Eyeem') === 0) {
+      $filename = __DIR__ . '/' . str_replace('_', '/', $className) . '.php';
+      if (file_exists($filename)) {
+        require_once $filename;
+        return true;
+      }
+    }
+  }
+
   public function getApiUrl($endpoint)
   {
     $url = $this->baseUrl . $endpoint;
