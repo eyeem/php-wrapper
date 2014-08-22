@@ -32,12 +32,10 @@ class Eyeem_Http
       } elseif (isset($clientId)) {
         $headers[] = "X-Client-Id: $clientId";
       }
-
-      if($header)
-      {
-          $headers = array_merge($headers, $header);
+      // Extra Header
+      if ($header) {
+        $headers = array_merge($headers, $header);
       }
-
       // Parameters
       if (!empty($params)) {
         switch ($method) {
