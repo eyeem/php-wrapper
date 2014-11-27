@@ -26,15 +26,11 @@ class Eyeem_Http
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
       }
       // Headers
-      $headers = array();
+      $headers = isset($headers) ? $headers : array();
       if (isset($accessToken)) {
         $headers[] = "Authorization: Bearer $accessToken";
       } elseif (isset($clientId)) {
         $headers[] = "X-Client-Id: $clientId";
-      }
-      // Extra Header
-      if ($header) {
-        $headers = array_merge($headers, $header);
       }
       // Parameters
       if (!empty($params)) {

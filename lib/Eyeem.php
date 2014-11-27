@@ -41,7 +41,7 @@ class Eyeem
     return $url;
   }
 
-  public function request($endpoint, $method = 'GET', $params = array(), $header = array())
+  public function request($endpoint, $method = 'GET', $params = array(), $headers = array())
   {
     $request = array(
       'url'         => $this->getApiUrl($endpoint),
@@ -49,7 +49,7 @@ class Eyeem
       'params'      => $params,
       'clientId'    => $this->getClientId(),
       'accessToken' => $this->getAccessToken(),
-      'header'      => $header
+      'headers'     => $headers
     );
     $response = Eyeem_Http::request($request);
     $array = json_decode($response['body'], true);
@@ -57,6 +57,14 @@ class Eyeem
       throw new Exception($array['message'], $response['code']);
     }
     return $array;
+  }
+
+  public function jsonRequest($endpoint, $method = 'GET', $params = array(), $headers = array())
+  {
+    $headers[] = 'Content-Type: application/json';
+    $params = json_encode($params);
+    $response = $this->request($endpoint, $method, $params, $headers);
+    return $response;
   }
 
   public function getRessourceObject($type, $ressource = array())
@@ -182,9 +190,20 @@ class Eyeem
 
   // Upload
 
+  public function getFile($filename)
+  {
+    // PHP 5.5 introduced a CurlFile object that deprecates the old @filename syntax
+    // See: https://wiki.php.net/rfc/curl-file-upload
+    if (function_exists('curl_file_create')) {
+        return curl_file_create($filename);
+    }
+    // Use the old style if using an older version of PHP
+    return "@{$filename}";
+  }
+
   public function uploadPhoto($filename)
   {
-    $params = array('photo' => "@$filename");
+    $params = array('photo' => $this->getFile($filename));
     $response = $this->request('/photos/upload', 'POST', $params);
     return $response['filename'];
   }
