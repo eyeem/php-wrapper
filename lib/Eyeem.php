@@ -7,6 +7,8 @@ class Eyeem
 
   public $authorizeUrl = 'https://www.eyeem.com/oauth/authorize';
 
+  public $apiVersion = '2.3.2';
+
   public $clientId;
 
   public $clientSecret;
@@ -47,6 +49,7 @@ class Eyeem
       'url'         => $this->getApiUrl($endpoint),
       'method'      => $method,
       'params'      => $params,
+      'apiVersion'  => $this->getApiVersion(),
       'clientId'    => $this->getClientId(),
       'accessToken' => $this->getAccessToken(),
       'headers'     => $headers
