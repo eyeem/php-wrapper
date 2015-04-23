@@ -47,7 +47,10 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     'minPhotos',
     'albumType',
     // Suggested
-    'suggested'
+    'suggested',
+    // Nearby Live
+    'lat',
+    'lng',
   );
 
   protected $_collection;
