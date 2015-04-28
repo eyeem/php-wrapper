@@ -51,6 +51,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     // Nearby Live
     'lat',
     'lng',
+    // Sort
+    'sort',
   );
 
   protected $_collection;
