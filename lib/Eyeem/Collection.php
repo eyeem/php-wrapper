@@ -53,6 +53,8 @@ class Eyeem_Collection extends Eyeem_CollectionIterator
     'lng',
     // Sort
     'sort',
+    // Ids,
+    'ids',
   );
 
   protected $_collection;
