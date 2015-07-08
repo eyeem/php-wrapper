@@ -56,9 +56,12 @@ class Eyeem
     );
     $response = Eyeem_Http::request($request);
     $array = json_decode($response['body'], true);
+
     if ($response['code'] >= 400) {
-      throw new Exception($array['message'], $response['code']);
+      $message = $array ? $array['message'] : $response['body'];
+      throw new Exception("Eyeem::request: " . $message, $response['code']);
     }
+
     return $array;
   }
 
